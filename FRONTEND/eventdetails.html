@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events</title>
+</head>
+<body>
+    <link rel = "stylesheet" href = "./CSS/styles.css"> 
+    <h1>Campus Buzz</h1>
+    <button onclick="logout()">Logout</button>
+    <h2>List of events</h2>
+    <hr />
+    <section class="event-details">
+        <h3 id="eventTitle"></h3>
+        <ul>
+            <li id="eventDate"></li>
+            <li id="eventTime"></li>
+            <li id="eventVenue"></li>
+            <li id="eventDescription"></li>
+            <li id="eventRegistration"></li>
+            <li>
+                Back to calendar
+                <a href="events.html"><button>Back to Calendar</button></a>
+            </li>
+        </ul>
+    </section>
+    <script src="js/eventdetails.js"></script>
+</body>
+</html>

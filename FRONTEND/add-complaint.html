@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Complaint</title>
+    <link rel="stylesheet" href="./CSS/styles.css">
+</head>
+<body>
+    <button onclick="logout()">Logout</button>
+    <h1>Add Complaint</h1>
+    <form id="complaintForm">
+        <label for="title">Complaint Title:</label><br>
+        <input type="text" id="title" name="title" required><br><br>
+        <label for="category">Category:</label><br>
+        <select id="category" name="category" required>
+            <option value="">Select category</option>
+            <option value="Hostel">Hostel</option>
+            <option value="Mess">Mess</option>
+            <option value="Academics">Academics</option>
+            <option value="Infrastructure">Infrastructure</option>
+            <option value="Other">Other</option>
+        </select><br><br>
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description" rows="5" cols="30" required></textarea><br><br>
+        <!-- FIX: Added missing location field that was causing add-complaint.js to fail -->
+        <label for="location">Location (optional):</label><br>
+        <input type="text" id="location" name="location" placeholder="e.g. Room F42, Hostel B"><br><br>
+        <button type="submit">Submit Complaint</button>
+    </form>
+    <script src="js/add-complaint.js"></script>
+</body>
+</html>
