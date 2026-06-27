@@ -8,7 +8,8 @@ let events = {};
 
 async function loadEvents() {
     try {
-        const response = await fetch("/events");
+        // call namespaced API path
+        const response = await fetch("/api/events");
         if (!response.ok) {
             throw new Error(`Failed to load events: ${response.status}`);
         }
