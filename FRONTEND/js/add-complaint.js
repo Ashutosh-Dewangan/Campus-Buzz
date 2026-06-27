@@ -10,6 +10,19 @@ if (currentUser.role !== "Student") {
     window.location.href = "complaints.html";
 }
 
+function apiHeaders() {
+    return {
+        "Content-Type": "application/json",
+        "x-user-role":  currentUser.role,
+        "x-user-email": currentUser.email
+    };
+}
+
+if (currentUser.role !== "Student") {
+    alert("Only students can raise complaints");
+    window.location.href = "complaints.html";
+}
+
 document.getElementById("complaintForm").addEventListener("submit", async function(event) {
     event.preventDefault();
 
@@ -25,20 +38,29 @@ document.getElementById("complaintForm").addEventListener("submit", async functi
     try {
         const response = await fetch(`${API_BASE}/api/complaints`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: apiHeaders(),
             body: JSON.stringify(newComplaint)
         });
 
         if (!response.ok) {
-            throw new Error(`Failed to save complaint: ${response.status}`);
+            const err = await response.json();
+            throw new Error(err.error || `HTTP ${response.status}`);
         }
+
+        const data = await response.json();
+
+        // Save this complaint's ID so complaints.js can show "Mark Resolved" button
+        // (needed because server strips owner field for anonymous mode)
+        const myIds = JSON.parse(sessionStorage.getItem("myComplaintIds") || "[]");
+        if (data.complaint?.id) myIds.push(data.complaint.id);
+        sessionStorage.setItem("myComplaintIds", JSON.stringify(myIds));
 
         alert("Complaint submitted successfully!");
         window.location.href = "complaints.html";
 
     } catch (error) {
         console.error("Error submitting complaint:", error);
-        alert("Unable to save complaint. Please try again.");
+        alert("Unable to save complaint: " + error.message);
     }
 });
 

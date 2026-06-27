@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — Campus Buzz</title>
+    <link rel="stylesheet" href="./CSS/styles.css">
+    <style>
+        .admin-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .admin-tabs button {
+            background: var(--light-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        .admin-tabs button.active {
+            background: var(--primary-color);
+            color: #020617;
+            border-color: var(--primary-color);
+        }
+        .panel { display: none; }
+        .panel.active { display: block; }
+        .admin-card {
+            background: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        .admin-card h4 { color: var(--primary-color); margin-bottom: 0.4rem; }
+        .admin-card p  { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .identity-tag {
+            display: inline-block;
+            background: rgba(239,68,68,0.1);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+        .card-actions { display:flex;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap; }
+        .card-actions button { padding: 0.3rem 0.9rem; font-size: 0.82rem; }
+        .status-select {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.85rem;
+            margin: 0;
+            width: auto;
+            display: inline-block;
+            border-radius: 6px;
+        }
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-box {
+            background: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+        .stat-box .num { font-size: 2rem; font-weight: 700; color: var(--primary-color); }
+        .stat-box .lbl { font-size: 0.8rem; color: var(--text-secondary); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div style="font-size:1.4rem;font-weight:700;color:var(--primary-color);margin-bottom:1.5rem">
+                📡 Campus Buzz
+            </div>
+            <nav>
+                <a href="./feed.html">🏠 Buzz Feed</a>
+                <a href="./club-feed.html">🏛️ Club Board</a>
+                <a href="./events.html">📅 Events</a>
+                <a href="./complaints.html">📢 Complaints</a>
+                <a href="./admin.html" style="color:var(--primary-color);font-weight:700">🛡️ Admin Panel</a>
+            </nav>
+            <hr style="margin:1.5rem 0">
+            <p id="userRole" style="font-size:0.8rem;color:var(--text-secondary)"></p>
+            <button onclick="logout()" class="secondary" style="width:100%;margin-top:0.5rem;padding:0.5rem">Logout</button>
+        </aside>
+        <main class="content">
+            <div class="header">
+                <h1 style="color:var(--primary-color)">🛡️ Admin Panel</h1>
+                <p>Moderate content, manage complaints, and oversee platform activity.</p>
+            </div>
+            <!-- Stats bar -->
+            <div class="stats-bar">
+                <div class="stat-box">
+                    <div class="num" id="statPosts">—</div>
+                    <div class="lbl">Posts</div>
+                </div>
+                <div class="stat-box">
+                    <div class="num" id="statComplaints">—</div>
+                    <div class="lbl">Complaints</div>
+                </div>
+                <div class="stat-box">
+                    <div class="num" id="statPending">—</div>
+                    <div class="lbl">Pending</div>
+                </div>
+                <div class="stat-box">
+                    <div class="num" id="statEvents">—</div>
+                    <div class="lbl">Events</div>
+                </div>
+            </div>
+            <!-- Tabs -->
+            <div class="admin-tabs">
+                <button class="active" id="tab-complaints" onclick="switchTab('complaints')">📢 Complaints</button>
+                <button id="tab-posts" onclick="switchTab('posts')">📝 All Posts</button>
+                <button id="tab-events" onclick="switchTab('events')">📅 Events</button>
+            </div>
+            <!-- Complaints Panel -->
+            <div class="panel active" id="panel-complaints">
+                <h3 style="margin-bottom:1rem">All Complaints — Full Identity Visible to Admin</h3>
+                <div id="complaintsList"><p style="color:var(--text-secondary)">Loading...</p></div>
+            </div>
+            <!-- Posts Panel -->
+            <div class="panel" id="panel-posts">
+                <h3 style="margin-bottom:1rem">All Campus Buzz Posts</h3>
+                <div id="postsList"><p style="color:var(--text-secondary)">Loading...</p></div>
+            </div>
+            <!-- Events Panel -->
+            <div class="panel" id="panel-events">
+                <h3 style="margin-bottom:1rem">All Events</h3>
+                <div id="eventsList"><p style="color:var(--text-secondary)">Loading...</p></div>
+            </div>
+        </main>
+    </div>
+    <script src="js/admin.js"></script>
+</body>
+</html>

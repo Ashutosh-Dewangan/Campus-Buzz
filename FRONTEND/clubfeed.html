@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Board — Campus Buzz</title>
+    <link rel="stylesheet" href="./CSS/styles.css">
+    <style>
+        .club-card {
+            background: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: box-shadow 0.3s;
+        }
+        .club-card:hover { box-shadow: 0 6px 20px rgba(6,182,212,0.1); }
+        .club-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            gap: 1rem;
+        }
+        .club-badge {
+            display: inline-block;
+            background: rgba(6,182,212,0.1);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .club-card h3 { color: var(--primary-color); margin-bottom: 0.25rem; }
+        .club-card p  { color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .form-embed-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16,185,129,0.1);
+            border: 1px solid #10b981;
+            color: #10b981;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            margin-top: 0.5rem;
+        }
+        .form-embed-link:hover { background: rgba(16,185,129,0.2); }
+        .event-link-badge {
+            display: inline-block;
+            background: rgba(245,158,11,0.1);
+            color: var(--warning-color);
+            border: 1px solid var(--warning-color);
+            border-radius: 6px;
+            padding: 3px 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        .meta { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.75rem; }
+        .add-club-form {
+            background: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .add-club-form h3 { color: var(--primary-color); margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div style="font-size:1.4rem;font-weight:700;color:var(--primary-color);margin-bottom:1.5rem">
+                📡 Campus Buzz
+            </div>
+            <nav>
+                <a href="./feed.html">🏠 Buzz Feed</a>
+                <a href="./club-feed.html" style="color:var(--primary-color);font-weight:700">🏛️ Club Board</a>
+                <a href="./events.html">📅 Events</a>
+                <a href="./complaints.html">📢 Complaints</a>
+                <a href="./admin.html" id="adminNav" style="display:none">🛡️ Admin Panel</a>
+            </nav>
+            <hr style="margin:1.5rem 0">
+            <p id="userRole" style="font-size:0.8rem;color:var(--text-secondary)"></p>
+            <button onclick="logout()" class="secondary" style="width:100%;margin-top:0.5rem;padding:0.5rem">
+                Logout
+            </button>
+        </aside>
+        <main class="content">
+            <div class="header">
+                <h1 style="color:var(--primary-color)">🏛️ Club Board</h1>
+                <p>Official announcements, events, and forms from campus clubs and committees.</p>
+            </div>
+            <!-- Create post form — hidden for Students by club-feed.js -->
+            <section class="add-club-form" id="addPostSection" style="display:none">
+                <h3>📢 New Announcement</h3>
+                <input type="text" id="postTitle" placeholder="Announcement title *">
+                <textarea id="postContent" placeholder="Announcement content *"></textarea>
+                <input type="text" id="postFormUrl" placeholder="Google Form URL (optional — shows 'Fill Form' button)">
+                <input type="text" id="postAuthor" placeholder="Club / Committee name *">
+                <input type="number" id="postLinkedEvent" placeholder="Linked Event ID (optional — links to calendar)">
+                <button onclick="submitClubPost()">📢 Post Announcement</button>
+            </section>
+            <!-- Posts feed -->
+            <div id="clubPostContainer">
+                <p style="color:var(--text-secondary)">Loading club announcements...</p>
+            </div>
+        </main>
+    </div>
+    <script src="js/club-feed.js"></script>
+    <script>
+        const u = JSON.parse(localStorage.getItem("currentUser"));
+        if (u && u.role === "Admin") {
+            document.getElementById("adminNav").style.display = "block";
+        }
+    </script>
+</body>
+</html>
