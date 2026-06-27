@@ -4,12 +4,32 @@ const router = express.Router();
 let events = [
     {
         day: 7,
-        title: "Hackathon",
+        title: "Football League Finals",
         date: "7 July 2026",
-        time: "9:00 AM",
-        venue: "Auditorium",
-        description: "24-hour coding challenge.",
-        club: "Coding Club",
+        time: "4:00 PM",
+        venue: "Sports Complex",
+        description: "Final matches of the football league. Cheer for your favorite teams!",
+        club: "SAMAR The Sports Club",
+        registration: ""
+    },
+    {
+        day: 15,
+        title: "Music Concert",
+        date: "15 July 2026",
+        time: "6:00 PM",
+        venue: "Open Ground",
+        description: "Live music performance by local bands. Bring your friends and enjoy the evening!",
+        club: "RAAGA The Music Club",
+        registration: ""
+    },
+    {
+        day: 20,
+        title: "Workshop on Web Development",
+        date: "20 July 2026",
+        time: "10:00 AM",
+        venue: "Computer Lab 1",
+        description: "Hands-on workshop to learn web development basics. Limited seats available, register early!",
+        club: "Turing Club of Programmers",
         registration: ""
     }
 ];

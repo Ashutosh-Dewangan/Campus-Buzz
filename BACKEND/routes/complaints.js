@@ -5,11 +5,18 @@ console.log("complaints.js loaded");
 
 let complaints = [
     {
-        title: "Broken Fan",
-        text: "The fan in Room 204 is not working.",
-        location: "Room 204",
-        status: "Pending",
+        title: "A/C not working",
+        text: "The air conditioner in room F42 is not functioning properly.",
+        location: "Room F42",
+        status: "In Progress",
         owner: "student1@nitrr.ac.in"
+    },
+    {
+        title: "Stray dogs in the campus",
+        text: "There are stray dogs roaming around the campus and they are a danger to students.",
+        location: "Central Park, Main Ground",
+        status: "Pending",
+        owner: "student2@nitrr.ac.in"
     }
 ];
 
