@@ -4,20 +4,27 @@ const router = express.Router();
 
 let posts = [
     {
-        user: "Rahul Dubey",
-        title: "Friendly match",
-        content: "Football match at 6 PM! Don't miss out",
-        image: "/assets/images/football.jpg",
-        hashtag: "#FootballIsLife",
-        owner: "Rahul Dubey",
+      user: "Ananya",
+      title: "",
+      content: "Order food with us. Live from Hostel Indrawati. Hurry up!!",
+      image: "",
+      hashtag: "#foodsplit",
+      owner: "Ananya Pathak"
     },
     {
-        user: "Aman Sharma",
-        title: "Hackathon announcement!",
-        content: "Hackathon registrations are open.",
-        image: "/assets/images/coding.jpg",
-        hashtag: "#Codingggg",
-        owner: "Aman Sharma"
+        user: "Rohit",  
+        title: "",
+        content: "Need a cab to the city. Anyone going?",
+        image: "",
+        hashtag: "#cabsplit",
+        owner: "Rohit Sharma"
+    },
+    {
+        user: "Harshita",
+        title: "",
+        content: "Selling my old Engineering Graphics Equipment. DM for details.",
+        hashtag: "#resell",
+        owner: "Harshita Gupta"
     }
 ];
 
