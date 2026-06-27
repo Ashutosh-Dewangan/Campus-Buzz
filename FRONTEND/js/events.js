@@ -33,6 +33,12 @@ function renderEvents() {
     document.getElementById("eventCount").innerText =
         "Total Events: " + Object.keys(events).length;
 
+    // FIX: Hide the Add Event button for Students (only Club/Admin can add events)
+    if (currentUser.role === "Student") {
+        const addLink = document.getElementById("add-event-link");
+        if (addLink) addLink.style.display = "none";
+    }
+
     let allDates = document.querySelectorAll(".calendar a");
     allDates.forEach(function(link) {
         const day = link.textContent;
@@ -69,7 +75,12 @@ function renderEvents() {
 }
 
 function searchEvent() {
-    let day = prompt("Enter date to search:");
+    // FIX: was using prompt() — now reads from the #searchDayInput text field in events.html
+    let day = document.getElementById("searchDayInput")?.value?.trim();
+    if (!day) {
+        alert("Please enter a day number to search.");
+        return;
+    }
     let result = document.getElementById("searchResult");
     let allDates = document.querySelectorAll(".calendar a");
     allDates.forEach(function(link) {
@@ -88,7 +99,7 @@ function searchEvent() {
         `;
     }
     else {
-        result.innerHTML = "No event found.";
+        result.innerHTML = "No event found on day " + day + ".";
     }
 }
 

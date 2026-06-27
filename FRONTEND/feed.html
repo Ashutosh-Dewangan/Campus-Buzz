@@ -3,57 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Buzz - Feed</title>
+    <title>Campus Buzz — Feed</title>
+    <link rel="stylesheet" href="./CSS/styles.css">
+    <style>
+        /* Expiry group shown/hidden by feed.js based on hashtag selection */
+        #expiryGroup { display: none; margin-bottom: 1rem; }
+        #expiryGroup label { font-size: 0.85rem; color: var(--warning-color); }
+    </style>
 </head>
 <body>
-    <link rel = "stylesheet" href = "./CSS/styles.css"> 
-    <h1>Buzz feed</h1>
-    <h2>Let's check what is going on in the campus</h2>
-    <hr />
-    <p id="userRole"></p>
-    <button onclick="logout()">Logout</button>
     <div class="container">
         <aside class="sidebar">
+            <div style="font-size:1.4rem;font-weight:700;color:var(--primary-color);margin-bottom:1.5rem">
+                📡 Campus Buzz
+            </div>
             <nav>
-                <a href="./feed.html">Buzz Feed</a>
-                <a href="./events.html">Events</a>
-                <a href="./complaints.html">Complaints</a>
-                <a href="./index.html">Home</a>
+                <a href="./feed.html">🏠 Buzz Feed</a>
+                <a href="./club-feed.html">🏛️ Club Board</a>
+                <a href="./events.html">📅 Events</a>
+                <a href="./complaints.html">📢 Complaints</a>
+                <a href="./admin.html" id="adminNav" style="display:none">🛡️ Admin Panel</a>
             </nav>
+            <hr style="margin:1.5rem 0">
+            <p id="userRole" style="font-size:0.8rem;color:var(--text-secondary)"></p>
+            <button onclick="logout()" class="secondary" style="width:100%;margin-top:0.5rem;padding:0.5rem">
+                Logout
+            </button>
         </aside>
         <main class="content">
             <div class="header">
-            <div>
-                <h1>Hey Ashutosh 👋</h1>
+                <h1>Hey <span id="greetName"></span> 👋</h1>
                 <p>What's the campus buzzing about today?</p>
             </div>
-            </div>
-            <section class="new-post">
-                <input type="text" id="username" placeholder="Your name">
-                <input type="text" id="postTitle" placeholder="Post title">
-                <textarea id="content" placeholder="Write description"></textarea>
-                <input type="text" id="imageUrl" placeholder="Paste image URL">
-               <select id="hashtag">
-                 <option value="">Select Hashtag</option>
-                 <option>#foodsplit</option>
-                 <option>#cabsplit</option>
-                 <option>#resell</option>
-                 <option>#lost</option>
-                 <option>#found</option>
-               </select>
-            <button onclick="addPost()">Post</button>
-            </section>
+            <!-- Hashtag Filter Buttons -->
             <section class="hashtags">
-                <button>All</button>
-                <button>#foodsplit</button>
-                <button>#cabsplit</button>
-                <button>#resell</button>
-                <button>#lost</button>
-                <button>#found</button>
+                <button data-tag="all" onclick="filterByHashtag('all')">All</button>
+                <button data-tag="#foodsplit" onclick="filterByHashtag('#foodsplit')">#foodsplit</button>
+                <button data-tag="#cabsplit"  onclick="filterByHashtag('#cabsplit')">#cabsplit</button>
+                <button data-tag="#resell"    onclick="filterByHashtag('#resell')">#resell</button>
+                <button data-tag="#lost"      onclick="filterByHashtag('#lost')">#lost</button>
+                <button data-tag="#found"     onclick="filterByHashtag('#found')">#found</button>
             </section>
-            <div class="posts" id="postContainer"></div>
+            <!-- New Post Form -->
+            <section class="new-post" id="newPostSection">
+                <h3 style="margin-bottom:1rem;color:var(--primary-color)">✍️ Create a Post</h3>
+                <input type="text" id="username" placeholder="Your name">
+                <input type="text" id="postTitle" placeholder="Post title *">
+                <textarea id="content" placeholder="What's happening? *"></textarea>
+                <input type="text" id="imageUrl" placeholder="Image URL (optional)">
+                <select id="hashtag">
+                    <option value="">Select Hashtag *</option>
+                    <option value="#foodsplit">#foodsplit</option>
+                    <option value="#cabsplit">#cabsplit</option>
+                    <option value="#resell">#resell</option>
+                    <option value="#lost">#lost</option>
+                    <option value="#found">#found</option>
+                </select>
+                <!-- Expiry input: shown by JS only for #foodsplit and #cabsplit -->
+                <div id="expiryGroup">
+                    <label for="expiryMins">
+                        ⏱ Auto-expire after how many minutes?
+                        (default 15 min — max 2880 min = 2 days)
+                    </label>
+                    <input type="number" id="expiryMins" min="10" max="2880" value="15" placeholder="Minutes">
+                </div>
+                <button onclick="addPost()">Post</button>
+            </section>
+            <!-- Posts List -->
+            <div id="postContainer"></div>
         </main>
     </div>
-    <script src="js/feed.js"></script>       
+    <!-- Socket.io for real-time expiry events -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/feed.js"></script>
+    <script>
+        // Show admin nav link if user is Admin
+        const u = JSON.parse(localStorage.getItem("currentUser"));
+        if (u && u.role === "Admin") {
+            document.getElementById("adminNav").style.display = "block";
+        }
+    </script>
 </body>
 </html>

@@ -2,22 +2,26 @@ const dummyUsers = [
     {
         rollNo: "25116083",
         email: "student1@nitrr.ac.in",
-        role: "Student"
+        role: "Student",
+        name: "Ananya Pathak"
     },
     {
         rollNo: "24115078",
         email: "club@nitrr.ac.in",
-        role: "Club member"
+        role: "Club member",
+        name: "Turing Club"
     },
     {
-        rollNo: "24115078",
+        rollNo: "22114091",  // FIX: was duplicate "24115078", now unique
         email: "student2@nitrr.ac.in",
-        role: "Student"
+        role: "Student",
+        name: "Rohit Sharma"
     },
     {
         rollNo: "23118055",
         email: "admin@nitrr.ac.in",
-        role: "Admin"
+        role: "Admin",
+        name: "Admin"
     }
 ];
 
