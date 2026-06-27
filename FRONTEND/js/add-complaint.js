@@ -15,24 +15,28 @@ document.getElementById("complaintForm").addEventListener("submit", async functi
     const newComplaint = {
         title: document.getElementById("title").value,
         text: document.getElementById("description").value,
-        location: document.getElementById("category").value,
+        location: document.getElementById("location").value,
         status: "Pending",
         owner: currentUser.email
     };
 
-    const response = await fetch("/complaints", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newComplaint)
-    });
+    try {
+        const response = await fetch("/complaints", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newComplaint)
+        });
 
-    if (!response.ok) {
+        if (!response.ok) {
+            throw new Error(`Failed to save complaint: ${response.status}`);
+        }
+
+        alert("Complaint submitted successfully!");
+        window.location.href = "complaints.html";
+    } catch (error) {
+        console.error("Error submitting complaint:", error);
         alert("Unable to save complaint. Please try again.");
-        return;
     }
-
-    alert("Complaint submitted successfully!");
-    window.location.href = "complaints.html";
 });
 
 function logout() {
