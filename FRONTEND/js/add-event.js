@@ -30,7 +30,8 @@ document.getElementById("eventForm").addEventListener("submit", async function(e
     };
 
     try {
-        const response = await fetch("/events", {
+        // Post to namespaced API path
+        const response = await fetch("/api/events", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newEvent)
