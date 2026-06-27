@@ -21,6 +21,7 @@ socket.emit("join-room", {
 // ── Receive message history on join ──────────────────────────────────────────
 socket.on("message-history", (messages) => {
     clearChat();
+    localStorage.setItem("chat_msg_count_" + postId, messages.length);
     if (messages.length === 0) {
         addSystemMessage("No messages yet. Be the first to say something!");
     } else {
@@ -31,6 +32,8 @@ socket.on("message-history", (messages) => {
 socket.on("new-message", (message) => {
     const isOwn = message.sender === (currentUser.name || currentUser.email);
     addMessage(message, isOwn);
+    const currentCount = parseInt(localStorage.getItem("chat_msg_count_" + postId) || "0");
+    localStorage.setItem("chat_msg_count_" + postId, currentCount + 1);
 });
 // ── Someone else joined ───────────────────────────────────────────────────────
 socket.on("user-joined", ({ username }) => {

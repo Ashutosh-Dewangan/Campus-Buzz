@@ -53,6 +53,11 @@ function displayPosts() {
         // Can user chat? Only #foodsplit, #cabsplit, #resell get chat rooms
         const chatHashtags = ["#foodsplit", "#cabsplit", "#resell"];
         const canChat = chatHashtags.includes(post.hashtag);
+        // Active chat indicator
+        const msgCount = parseInt(localStorage.getItem("chat_msg_count_" + post.id) || "0");
+        const activeChatBadge = (canChat && msgCount > 0)
+            ? `<span class="badge-active-chat" style="display:inline-block;background-color:#10b981;color:white;padding:0.2rem 0.5rem;border-radius:12px;font-size:0.8rem;margin-left:0.5rem;animation:timer-pulse-warn 1.5s infinite;">💬 Active Chat (${msgCount})</span>`
+            : "";
         // Can user extend? Only if post has expiry and user is owner
         const canExtend = post.expiry && post.owner === currentUser.email;
         // Can user delete?
@@ -67,7 +72,10 @@ function displayPosts() {
                     <h3>${escapeHtml(post.user)}</h3>
                     <h4>${escapeHtml(post.title)}</h4>
                 </div>
-                <span class="hashtag-tag">${escapeHtml(post.hashtag)}</span>
+                <div>
+                    <span class="hashtag-tag">${escapeHtml(post.hashtag)}</span>
+                    ${activeChatBadge}
+                </div>
             </div>
             <p>${escapeHtml(post.content)}</p>
             ${post.image ? `<img src="${post.image.startsWith('/') ? API_BASE + escapeHtml(post.image) : escapeHtml(post.image)}" alt="Post image" style="max-width:100%;border-radius:6px;margin:0.5rem 0">` : ""}
