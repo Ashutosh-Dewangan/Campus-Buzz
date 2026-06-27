@@ -62,6 +62,12 @@ function displayPosts() {
         const canExtend = post.expiry && post.owner === currentUser.email;
         // Can user delete?
         const canDelete = post.owner === currentUser.email || currentUser.role === "Admin";
+        // Can report? Non-owners can report
+        const isOwner = post.owner === currentUser.email;
+        // Admin flag counter display
+        const reportsLabel = (currentUser.role === "Admin" && post.reports && post.reports.length > 0)
+            ? `<span class="badge-flags" style="display:inline-block;background-color:var(--danger-color);color:white;padding:0.2rem 0.5rem;border-radius:12px;font-size:0.8rem;margin-left:0.5rem;">⚠️ Flags: ${post.reports.length}</span>`
+            : "";
         // Expiry display
         const expiryHtml = post.expiry
             ? `<div id="timer-${post.id}" class="timer">⏱ Loading timer...</div>`
@@ -75,6 +81,7 @@ function displayPosts() {
                 <div>
                     <span class="hashtag-tag">${escapeHtml(post.hashtag)}</span>
                     ${activeChatBadge}
+                    ${reportsLabel}
                 </div>
             </div>
             <p>${escapeHtml(post.content)}</p>
@@ -83,6 +90,7 @@ function displayPosts() {
             <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:0.75rem">
                 ${canChat ? `<button class="secondary" onclick="openChat('${post.id}', '${escapeHtml(post.hashtag)}', '${escapeHtml(post.owner || '')}')">💬 Open Chat</button>` : ""}
                 ${canExtend ? `<button class="secondary" onclick="extendPost('${post.id}')">Extend 30m</button>` : ""}
+                ${!isOwner ? `<button class="warning" onclick="reportPost('${post.id}')">⚠️ Report</button>` : ""}
                 ${canDelete ? `<button class="danger" onclick="deletePost('${post.id}')">Delete</button>` : ""}
             </div>
         `;
@@ -229,6 +237,27 @@ document.getElementById("hashtag")?.addEventListener("change", function() {
     const timeSensitive = ["#foodsplit", "#cabsplit"].includes(this.value);
     expiryGroup.style.display = timeSensitive ? "block" : "none";
 });
+// ── Report a Post ─────────────────────────────────────────────────────────────
+async function reportPost(postId) {
+    if (!confirm("Are you sure you want to report/flag this post?")) return;
+    try {
+        const response = await fetch(`${API_BASE}/api/posts/${postId}/report`, {
+            method: "POST",
+            headers: apiHeaders()
+        });
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error || `HTTP ${response.status}`);
+        }
+        alert("Thank you. The post has been flagged for moderation.");
+        // Reload the feed to apply hiding if reports >= 3
+        loadPosts(activeHashtag);
+    } catch (error) {
+        console.error("Error reporting post:", error);
+        alert("Unable to report post: " + error.message);
+    }
+}
+
 // ── Escape HTML (XSS protection) ──────────────────────────────────────────────
 function escapeHtml(text) {
     if (text === null || text === undefined) return "";
