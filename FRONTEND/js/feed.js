@@ -1,3 +1,4 @@
+const API_BASE = window.location.port === "5000" ? "" : "http://localhost:5000";
 let currentUser = JSON.parse(localStorage.getItem("currentUser"));
 if (!currentUser) {
     alert("Please login first");
@@ -9,7 +10,7 @@ let posts = [];
 
 async function loadPosts() {
     try {
-        const response = await fetch("/posts");
+        const response = await fetch(`${API_BASE}/api/posts`);
 
         console.log("Status:", response.status);
 
@@ -43,7 +44,7 @@ function displayPosts() {
         <h3>${escapeHtml(post.user)}</h3>
         <h4>${escapeHtml(post.title)}</h4>
         <p>${escapeHtml(post.content)}</p>
-        ${post.image ? `<img src="${escapeHtml(post.image)}" width="200" alt="Post image">` : ""}
+        ${post.image ? `<img src="${post.image.startsWith('/') ? API_BASE + escapeHtml(post.image) : escapeHtml(post.image)}" width="200" alt="Post image">` : ""}
         <p class="hashtag-tag" onclick="handleHashtag('${escapeHtml(post.hashtag)}', '${escapeHtml(post.user)}')">
         ${escapeHtml(post.hashtag)}
         </p>
@@ -57,22 +58,27 @@ function displayPosts() {
 }
 
 function updateTimers() {
-    posts.forEach(function(post, index) {
+    let expiredAny = false;
+    for (let i = posts.length - 1; i >= 0; i--) {
+        let post = posts[i];
         if (post.expiry) {
             let remainingTime = Math.floor((post.expiry - Date.now()) / 1000);
-            let timerElement = document.getElementById("timer-" + index);
+            let timerElement = document.getElementById("timer-" + i);
             if (timerElement) {
                 if (remainingTime > 0) {
                     timerElement.innerText =
                         "Expires in: " + remainingTime + " sec";
                 }
                 else {
-                    posts.splice(index, 1);
-                    displayPosts();
+                    posts.splice(i, 1);
+                    expiredAny = true;
                 }
             }
         }
-    });
+    }
+    if (expiredAny) {
+        displayPosts();
+    }
 }
 
 async function addPost() {
@@ -102,7 +108,7 @@ async function addPost() {
             newPost.expiry = Date.now() + 900000;
         }
         
-        const response = await fetch("/posts", {
+        const response = await fetch(`${API_BASE}/api/posts`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newPost)
@@ -135,6 +141,7 @@ function deletePost(index) {
 }
 
 function escapeHtml(text) {
+    if (text === null || text === undefined) return "";
     const map = {
         '&': '&amp;',
         '<': '&lt;',
@@ -142,7 +149,7 @@ function escapeHtml(text) {
         '"': '&quot;',
         "'": '&#039;'
     };
-    return text.replace(/[&<>"']/g, m => map[m]);
+    return String(text).replace(/[&<>"']/g, m => map[m]);
 }
 
 loadPosts();

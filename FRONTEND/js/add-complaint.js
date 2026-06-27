@@ -1,3 +1,4 @@
+const API_BASE = window.location.port === "5000" ? "" : "http://localhost:5000";
 let currentUser = JSON.parse(localStorage.getItem("currentUser"));
 if (!currentUser) {
     alert("Please login first");
@@ -15,13 +16,15 @@ document.getElementById("complaintForm").addEventListener("submit", async functi
     const newComplaint = {
         title: document.getElementById("title").value,
         text: document.getElementById("description").value,
-        location: document.getElementById("location").value,
+        // Commented out the error-causing line below because there is no "location" element in add-complaint.html:
+        // location: document.getElementById("location").value,
+        location: "", // Fallback empty string
         status: "Pending",
         owner: currentUser.email
     };
 
     try {
-        const response = await fetch("/complaints", {
+        const response = await fetch(`${API_BASE}/api/complaints`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newComplaint)

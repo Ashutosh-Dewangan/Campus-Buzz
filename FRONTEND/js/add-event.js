@@ -1,3 +1,4 @@
+const API_BASE = window.location.port === "5000" ? "" : "http://localhost:5000";
 let currentUser = JSON.parse(localStorage.getItem("currentUser"));
 if (!currentUser) {
     alert("Please login first");
@@ -31,7 +32,7 @@ document.getElementById("eventForm").addEventListener("submit", async function(e
 
     try {
         // Post to namespaced API path
-        const response = await fetch("/api/events", {
+        const response = await fetch(`${API_BASE}/api/events`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newEvent)

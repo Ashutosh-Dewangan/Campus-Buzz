@@ -1,3 +1,4 @@
+const API_BASE = window.location.port === "5000" ? "" : "http://localhost:5000";
 let currentUser = JSON.parse(localStorage.getItem("currentUser"));
 if (!currentUser) {
     alert("Please login first");
@@ -8,7 +9,7 @@ let complaints = [];
 
 async function loadComplaints() {
     try {
-        const response = await fetch("/complaints");
+        const response = await fetch(`${API_BASE}/api/complaints`);
         if (!response.ok) {
             throw new Error(`Failed to load complaints: ${response.status} ${response.statusText}`);
         }
@@ -69,7 +70,7 @@ async function addComplaint() {
             owner: currentUser.email
         };
         
-        const response = await fetch("/complaints", {
+        const response = await fetch(`${API_BASE}/api/complaints`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newComplaint)
