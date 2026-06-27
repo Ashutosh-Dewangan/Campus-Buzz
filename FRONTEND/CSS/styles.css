@@ -458,9 +458,84 @@ label {
     color: var(--primary-color);
     margin-bottom: 1.5rem;
     text-align: center;
+    margin-bottom: 32px;
 }
 
-/* Responsive Design */
+.brand-header h1 {
+    font-size: 2rem;
+    color: #2d3748;
+    font-weight: 600;
+}
+
+/* Colorful pop for the 'Buzz' text */
+.brand-header h1 span {
+    color: #667eea;
+}
+
+.brand-header p {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-top: 6px;
+}
+
+/* Input Fields & Labels */
+.input-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    color: #4a5568;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #2d3748;
+    outline: none;
+    transition: all 0.25s ease;
+}
+
+/* Smooth ring effect when clicking into an input */
+.input-group input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+/* Modern Gradient Button */
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Interactive feedback on hover and press */
+.login-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.login-btn:active {
+    transform: translateY(1px);
+}
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
 @media (max-width: 768px) {
     header h1 {
         font-size: 2rem;
