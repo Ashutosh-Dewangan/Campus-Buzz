@@ -6,24 +6,20 @@ let nextPostId = 3;
 
 let posts = [
     {
-        id: 1,
         user: "Rahul Dubey",
         title: "Friendly match",
-        content: "Football match at 6 PM! Do not miss out.",
+        content: "Football match at 6 PM! Don't miss out",
         image: "/assets/images/football.jpg",
         hashtag: "#FootballIsLife",
-        owner: "student1@nitrr.ac.in",
-        expiry: null
+        owner: "Rahul Dubey",
     },
     {
-        id: 2,
         user: "Aman Sharma",
-        title: "Hackathon announcement",
+        title: "Hackathon announcement!",
         content: "Hackathon registrations are open.",
         image: "/assets/images/coding.jpg",
         hashtag: "#Codingggg",
-        owner: "club@nitrr.ac.in",
-        expiry: null
+        owner: "Aman Sharma"
     }
 ];
 
@@ -65,14 +61,13 @@ router.post("/", (req, res) => {
     }
 
     const newPost = {
-        id: nextPostId++,
-        user,
-        title,
-        content,
-        image,
-        hashtag,
-        owner,
-        expiry
+        user: req.body.user,
+        title: req.body.title,
+        content: req.body.content,
+        image: req.body.image,
+        hashtag: req.body.hashtag,
+        owner: req.body.owner,
+        expiry: req.body.expiry || null
     };
 
     posts.unshift(newPost);

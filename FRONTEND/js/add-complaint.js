@@ -22,18 +22,12 @@ if (currentUser) {
                 owner: currentUser.email
             };
 
-            if (!newComplaint.title || !newComplaint.category || !newComplaint.text) {
-                alert("Please fill all required fields.");
-                return;
-            }
-
-            submitButton.disabled = true;
-
-            try {
-                await CampusBuzz.api("/complaints", {
-                    method: "POST",
-                    body: JSON.stringify(newComplaint)
-                });
+    try {
+        const response = await fetch("/complaints", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newComplaint)
+        });
 
                 window.location.href = "complaints.html";
             } catch (error) {
