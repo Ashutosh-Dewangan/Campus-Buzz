@@ -16,9 +16,8 @@ document.getElementById("complaintForm").addEventListener("submit", async functi
     const newComplaint = {
         title: document.getElementById("title").value,
         text: document.getElementById("description").value,
-        // Commented out the error-causing line below because there is no "location" element in add-complaint.html:
-        // location: document.getElementById("location").value,
-        location: "", // Fallback empty string
+        // FIX: location field now exists in the HTML (was missing before, causing JS error)
+        location: document.getElementById("location")?.value || "",
         status: "Pending",
         owner: currentUser.email
     };

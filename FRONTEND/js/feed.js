@@ -6,6 +6,9 @@ if (!currentUser) {
 }
 document.getElementById("userRole").innerText =
     "Logged in as: " + currentUser.role;
+// FIX: Replace hardcoded 'Ashutosh' greeting — reads actual logged-in user's name
+const greetEl = document.getElementById("greetName");
+if (greetEl) greetEl.innerText = currentUser.name || currentUser.email;
 let posts = [];
 
 async function loadPosts() {
@@ -66,8 +69,14 @@ function updateTimers() {
             let timerElement = document.getElementById("timer-" + i);
             if (timerElement) {
                 if (remainingTime > 0) {
-                    timerElement.innerText =
-                        "Expires in: " + remainingTime + " sec";
+                    // FIX: show H:MM:SS format instead of raw seconds
+                    const h = Math.floor(remainingTime / 3600);
+                    const m = Math.floor((remainingTime % 3600) / 60);
+                    const s = remainingTime % 60;
+                    const timeStr = h > 0
+                        ? `${h}h ${m}m ${s}s`
+                        : m > 0 ? `${m}m ${s}s` : `${s}s`;
+                    timerElement.innerText = "⏱ Expires in: " + timeStr;
                 }
                 else {
                     posts.splice(i, 1);
@@ -133,10 +142,22 @@ async function addPost() {
     }
 }
 
-function deletePost(index) {
+async function deletePost(index) {
     if (confirm("Are you sure you want to delete this post?")) {
-        posts.splice(index, 1);
-        displayPosts();
+        try {
+            // FIX: was only removing from local array; now syncs to backend via DELETE
+            const response = await fetch(`${API_BASE}/api/posts/${index}`, {
+                method: "DELETE"
+            });
+            if (!response.ok) {
+                throw new Error("Failed to delete post on server");
+            }
+            posts.splice(index, 1);
+            displayPosts();
+        } catch (error) {
+            console.error("Error deleting post:", error);
+            alert("Unable to delete post. Please try again.");
+        }
     }
 }
 

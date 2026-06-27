@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Buzz - Events</title>
+    <link rel="stylesheet" href="./CSS/styles.css">
 </head>
 <body>
-    <link rel = "stylesheet" href = "./CSS/styles.css"> 
     <h1>Campus Buzz</h1>
     <button onclick="logout()">Logout</button>
     <h2>Events Calendar</h2>
@@ -22,10 +22,15 @@
     <hr>
     <h3>July 2026</h3>
     <p id="eventCount"></p>
-    <a href="add-event.html">
+    <!-- FIX: Add Event button now hidden for Students (controlled by events.js) -->
+    <a href="add-event.html" id="add-event-link">
     <button id="add-event-btn">+ Add Event</button>
     </a>
-    <button onclick="searchEvent()">Search Event</button>
+    <!-- FIX: Replace prompt() with a real search input for better UX -->
+    <div style="display:inline-flex;gap:6px;align-items:center;">
+        <input type="text" id="searchDayInput" placeholder="Search day (e.g. 7)" style="padding:4px 8px">
+        <button onclick="searchEvent()">Search Event</button>
+    </div>
     <div id="searchResult"></div>
     <table class = "calendar">
         <tr>

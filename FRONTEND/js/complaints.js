@@ -152,14 +152,24 @@ function logout() {
     window.location.href = "login.html";
 }
 
-function resolveComplaint(index) {
+async function resolveComplaint(index) {
     try {
         if (confirm("Mark this complaint as resolved?")) {
+            // FIX: was only updating local array; now syncs to backend via PUT
+            const response = await fetch(`${API_BASE}/api/complaints/${index}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: "Resolved" })
+            });
+            if (!response.ok) {
+                throw new Error("Failed to update complaint status");
+            }
             complaints[index].status = "Resolved";
             displayComplaints();
             alert("Complaint marked as resolved.");
         }
     } catch (error) {
         console.error("Error resolving complaint:", error);
+        alert("Unable to resolve complaint. Please try again.");
     }
 }
