@@ -31,10 +31,10 @@ console.log("Post routes loaded:", postRoutes);
 console.log("Events routes loaded:", eventRoutes);
 console.log("Complaints route loaded:", complaintRoutes);
 
-// Register routes
-app.use("/posts", postRoutes);
-app.use("/events", eventRoutes);
-app.use("/complaints", complaintRoutes);
+// Register routes under /api to avoid collisions with static files
+app.use("/api/posts", postRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/complaints", complaintRoutes);
 
 // Test route
 app.get("/test", (req, res) => {
