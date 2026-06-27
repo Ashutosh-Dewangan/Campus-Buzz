@@ -38,4 +38,36 @@ router.delete("/:id", roleGate(["Club member", "Admin"]), (req, res) => {
     events.splice(idx, 1);
     res.json({ success: true, message: "Event deleted." });
 });
+// POST /api/events/:id/rsvp
+router.post("/:id/rsvp", (req, res) => {
+    const id = parseInt(req.params.id);
+    const { email, status } = req.body;
+    if (!email || !status) {
+        return res.status(400).json({ success: false, error: "email and status are required." });
+    }
+    const idx = events.findIndex(e => e.id === id);
+    if (idx === -1) {
+        return res.status(404).json({ success: false, error: "Event not found." });
+    }
+    const event = events[idx];
+    
+    // Init rsvps arrays if they don't exist
+    if (!event.rsvps) {
+        event.rsvps = { going: [], interested: [] };
+    }
+    
+    // Remove user email from both lists first
+    event.rsvps.going = event.rsvps.going.filter(e => e !== email);
+    event.rsvps.interested = event.rsvps.interested.filter(e => e !== email);
+    
+    // Add to selected list
+    if (status === "going") {
+        event.rsvps.going.push(email);
+    } else if (status === "interested") {
+        event.rsvps.interested.push(email);
+    }
+    
+    res.json({ success: true, event });
+});
+
 module.exports = router;

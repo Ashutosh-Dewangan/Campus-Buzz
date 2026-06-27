@@ -53,8 +53,21 @@ function displayPosts() {
         // Can user chat? Only #foodsplit, #cabsplit, #resell get chat rooms
         const chatHashtags = ["#foodsplit", "#cabsplit", "#resell"];
         const canChat = chatHashtags.includes(post.hashtag);
+        // Active chat indicator
+        const msgCount = parseInt(localStorage.getItem("chat_msg_count_" + post.id) || "0");
+        const activeChatBadge = (canChat && msgCount > 0)
+            ? `<span class="badge-active-chat" style="display:inline-block;background-color:#10b981;color:white;padding:0.2rem 0.5rem;border-radius:12px;font-size:0.8rem;margin-left:0.5rem;animation:timer-pulse-warn 1.5s infinite;">💬 Active Chat (${msgCount})</span>`
+            : "";
+        // Can user extend? Only if post has expiry and user is owner
+        const canExtend = post.expiry && post.owner === currentUser.email;
         // Can user delete?
         const canDelete = post.owner === currentUser.email || currentUser.role === "Admin";
+        // Can report? Non-owners can report
+        const isOwner = post.owner === currentUser.email;
+        // Admin flag counter display
+        const reportsLabel = (currentUser.role === "Admin" && post.reports && post.reports.length > 0)
+            ? `<span class="badge-flags" style="display:inline-block;background-color:var(--danger-color);color:white;padding:0.2rem 0.5rem;border-radius:12px;font-size:0.8rem;margin-left:0.5rem;">⚠️ Flags: ${post.reports.length}</span>`
+            : "";
         // Expiry display
         const expiryHtml = post.expiry
             ? `<div id="timer-${post.id}" class="timer">⏱ Loading timer...</div>`
@@ -65,14 +78,20 @@ function displayPosts() {
                     <h3>${escapeHtml(post.user)}</h3>
                     <h4>${escapeHtml(post.title)}</h4>
                 </div>
-                <span class="hashtag-tag">${escapeHtml(post.hashtag)}</span>
+                <div>
+                    <span class="hashtag-tag">${escapeHtml(post.hashtag)}</span>
+                    ${activeChatBadge}
+                    ${reportsLabel}
+                </div>
             </div>
             <p>${escapeHtml(post.content)}</p>
-            ${post.image ? `<img src="${escapeHtml(post.image)}" alt="Post image" style="max-width:100%;border-radius:6px;margin:0.5rem 0">` : ""}
+            ${post.image ? `<img src="${post.image.startsWith('/') ? API_BASE + escapeHtml(post.image) : escapeHtml(post.image)}" alt="Post image" style="max-width:100%;border-radius:6px;margin:0.5rem 0">` : ""}
             ${expiryHtml}
             <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:0.75rem">
                 ${canChat ? `<button class="secondary" onclick="openChat('${post.id}', '${escapeHtml(post.hashtag)}', '${escapeHtml(post.owner || '')}')">💬 Open Chat</button>` : ""}
-                ${canDelete ? `<button class="danger" onclick="deletePost(${post.id})">Delete</button>` : ""}
+                ${canExtend ? `<button class="secondary" onclick="extendPost('${post.id}')">Extend 30m</button>` : ""}
+                ${!isOwner ? `<button class="warning" onclick="reportPost('${post.id}')">⚠️ Report</button>` : ""}
+                ${canDelete ? `<button class="danger" onclick="deletePost('${post.id}')">Delete</button>` : ""}
             </div>
         `;
         container.appendChild(card);
@@ -93,6 +112,11 @@ function updateTimers() {
             el.innerText = h > 0
                 ? `⏱ Expires in: ${h}h ${m}m ${s}s`
                 : m > 0 ? `⏱ Expires in: ${m}m ${s}s` : `⏱ Expires in: ${s}s`;
+            if (remaining < 300) {
+                el.classList.add("timer-warning");
+            } else {
+                el.classList.remove("timer-warning");
+            }
         } else {
             // Expired on client side — remove card optimistically
             const card = document.getElementById(`post-card-${post.id}`);
@@ -158,6 +182,30 @@ async function deletePost(postId) {
         alert("Could not delete: " + error.message);
     }
 }
+
+// ── Extend a Post ─────────────────────────────────────────────────────────────
+async function extendPost(postId) {
+    try {
+        const response = await fetch(`${API_BASE}/api/posts/${postId}/extend`, {
+            method: "POST",
+            headers: apiHeaders()
+        });
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error || `HTTP ${response.status}`);
+        }
+        const data = await response.json();
+        // Update local post expiry
+        const post = posts.find(p => p.id === parseInt(postId));
+        if (post) {
+            post.expiry = data.post.expiry;
+        }
+        alert("Post timer extended by 30 minutes!");
+    } catch (error) {
+        console.error("Error extending post:", error);
+        alert("Unable to extend post: " + error.message);
+    }
+}
 // ── Open Chat Room ────────────────────────────────────────────────────────────
 // Stores post info so chat.js knows which Socket.io room to join
 function openChat(postId, hashtag, ownerEmail) {
@@ -189,6 +237,27 @@ document.getElementById("hashtag")?.addEventListener("change", function() {
     const timeSensitive = ["#foodsplit", "#cabsplit"].includes(this.value);
     expiryGroup.style.display = timeSensitive ? "block" : "none";
 });
+// ── Report a Post ─────────────────────────────────────────────────────────────
+async function reportPost(postId) {
+    if (!confirm("Are you sure you want to report/flag this post?")) return;
+    try {
+        const response = await fetch(`${API_BASE}/api/posts/${postId}/report`, {
+            method: "POST",
+            headers: apiHeaders()
+        });
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error || `HTTP ${response.status}`);
+        }
+        alert("Thank you. The post has been flagged for moderation.");
+        // Reload the feed to apply hiding if reports >= 3
+        loadPosts(activeHashtag);
+    } catch (error) {
+        console.error("Error reporting post:", error);
+        alert("Unable to report post: " + error.message);
+    }
+}
+
 // ── Escape HTML (XSS protection) ──────────────────────────────────────────────
 function escapeHtml(text) {
     if (text === null || text === undefined) return "";

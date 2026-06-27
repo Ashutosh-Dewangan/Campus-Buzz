@@ -19,8 +19,13 @@
             <li id="eventVenue"></li>
             <li id="eventDescription"></li>
             <li id="eventRegistration"></li>
-            <li>
-                Back to calendar
+            <li id="eventRsvps" style="margin-top: 1rem; font-weight: bold;"></li>
+            <li style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button id="btnGoing" class="success" onclick="submitRsvp('going')">Going</button>
+                <button id="btnInterested" class="secondary" onclick="submitRsvp('interested')">Interested</button>
+                <a id="btnGoogleCalendar" target="_blank"><button class="secondary">🗓 Add to Google Calendar</button></a>
+            </li>
+            <li style="margin-top: 1.5rem;">
                 <a href="events.html"><button>Back to Calendar</button></a>
             </li>
         </ul>

@@ -42,12 +42,15 @@ function displayComplaints() {
         card.className = "complaint-card";
         const statusClass = complaint.status.toLowerCase().replace(/\s+/g, "-");
         const canResolve = myComplaintIds.includes(complaint.id) && complaint.status !== "Resolved";
+        const filedBy = currentUser.role === "Admin" && complaint.owner
+            ? escapeHtml(complaint.owner)
+            : "Anonymous";
         card.innerHTML = `
             <h3>${escapeHtml(complaint.title)}</h3>
             <p>${escapeHtml(complaint.text)}</p>
             <p><strong>Location:</strong> ${escapeHtml(complaint.location || "Not specified")}</p>
             <p><strong>Status:</strong> <span class="status ${statusClass}">${escapeHtml(complaint.status)}</span></p>
-            <!-- No owner shown here — server already stripped it for non-admin users -->
+            <p><strong>Filed by:</strong> ${filedBy}</p>
             ${canResolve ? `<button class="success" onclick="resolveComplaint(${complaint.id})">
                 ✅ Mark as Resolved
             </button>` : ""}
@@ -83,11 +86,15 @@ function filterComplaints() {
         const card = document.createElement("div");
         card.className = "complaint-card";
         const statusClass = complaint.status.toLowerCase().replace(/\s+/g, "-");
+        const filedBy = currentUser.role === "Admin" && complaint.owner
+            ? escapeHtml(complaint.owner)
+            : "Anonymous";
         card.innerHTML = `
             <h3>${escapeHtml(complaint.title)}</h3>
             <p>${escapeHtml(complaint.text)}</p>
             <p><strong>Location:</strong> ${escapeHtml(complaint.location || "Not specified")}</p>
             <p><strong>Status:</strong> <span class="status ${statusClass}">${escapeHtml(complaint.status)}</span></p>
+            <p><strong>Filed by:</strong> ${filedBy}</p>
         `;
         container.appendChild(card);
     });
@@ -102,4 +109,5 @@ function logout() {
     localStorage.removeItem("currentUser");
     window.location.href = "login.html";
 }
+
 loadComplaints();

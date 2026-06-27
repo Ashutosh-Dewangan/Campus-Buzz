@@ -116,3 +116,16 @@ server.listen(PORT, () => {
     console.log(`   Socket.io real-time chat: enabled`);
     console.log(`   Post expiry background job: running every 60s`);
 });
+
+server.on("error", (e) => {
+    if (e.code === "EADDRINUSE") {
+        console.error(`\n❌ Error: Port ${PORT} is already in use.`);
+        console.error(`This usually means another instance of the server or a tool (like Live Server) is occupying it.`);
+        console.error(`Please close the other process or configure a different port using process.env.PORT.\n`);
+        process.exit(1);
+    } else {
+        console.error(e);
+    }
+});
+
+module.exports = app;
