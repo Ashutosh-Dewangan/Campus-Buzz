@@ -4,21 +4,39 @@ const router = express.Router();
 
 let posts = [
     {
-        user: "Rahul Dubey",
-        title: "Friendly match",
-        content: "Football match at 6 PM! Don't miss out",
-        image: "/assets/images/football.jpg",
-        hashtag: "#FootballIsLife",
-        owner: "Rahul Dubey",
+        user: "Rahul",
+        title: "Cab for railway station",
+        content: "Cab booked at 5PM",
+        image: "",
+        hashtag: "#cabsplit",
+        owner: "Rahul Khatri"
     },
     {
-        user: "Aman Sharma",
-        title: "Hackathon announcement!",
+        user: "Aman",
+        title: "Hackathon 3.0 by TCP",
         content: "Hackathon registrations are open.",
-        image: "/assets/images/coding.jpg",
-        hashtag: "#Codingggg",
+        image: "",
+        hashtag: "#events",
         owner: "Aman Sharma"
+    },
+
+    {
+        user: "Harshita",
+        title: "Keys Found",
+        content: "Found: Set of keys near CCC.",
+        image: "",
+        hashtag: "#found",
+        owner: "Harshita Patel"
+    },
+    {
+        user: "Ananya",
+        title: "Dosa party !!!!",
+        content: "Dosa party at Hostel 1 room 111",
+        image: "",
+        hashtag: "#foodsplit",
+        owner: "Ananya Pathak"
     }
+
 ];
 
 // GET all posts
@@ -34,7 +52,6 @@ router.post("/", (req, res) => {
         title: req.body.title,
         content: req.body.content,
         image: req.body.image,
-        hashtag: req.body.hashtag,
         owner: req.body.owner,
         expiry: req.body.expiry || null
     };
