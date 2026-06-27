@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Buzz - Events</title>
+</head>
+<body>
+    <link rel = "stylesheet" href = "./CSS/styles.css"> 
+    <h1>Campus Buzz</h1>
+    <button onclick="logout()">Logout</button>
+    <h2>Events Calendar</h2>
+
+        <aside class="sidebar">
+            <nav>
+                <a href="./feed.html">Buzz Feed</a>
+                <a href="./events.html">Events</a>
+                <a href="./complaints.html">Complaints</a>
+                <a href="./index.html">Home</a>
+            </nav>
+        </aside>
+    <hr>
+    <h3>July 2026</h3>
+    <p id="eventCount"></p>
+    <a href="add-event.html">
+    <button id="add-event-btn">+ Add Event</button>
+    </a>
+    <button onclick="searchEvent()">Search Event</button>
+    <div id="searchResult"></div>
+    <table class = "calendar">
+        <tr>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a href="./eventdetails.html">1</a></td>
+        </tr>
+        <tr>
+            <td><a href="./eventdetails.html">2</a></td>
+            <td><a href="./eventdetails.html">3</a></td>
+            <td><a href="./eventdetails.html">4</a></td>
+            <td><a href="./eventdetails.html">5</a></td>
+            <td><a href="./eventdetails.html">6</a></td>
+            <td><a href="./eventdetails.html">7</a></td>
+            <td><a href="./eventdetails.html">8</a></td>
+        </tr>
+        <tr>
+            <td><a href="./eventdetails.html">9</a></td>
+            <td><a href="./eventdetails.html">10</a></td>
+            <td><a href="./eventdetails.html">11</a></td>
+            <td><a href="./eventdetails.html">12</a></td>
+            <td><a href="./eventdetails.html">13</a></td>
+            <td><a href="./eventdetails.html">14</a></td>
+            <td><a href="./eventdetails.html">15</a></td>
+        </tr>
+        <tr>
+            <td><a href="./eventdetails.html">16</a></td>
+            <td><a href="./eventdetails.html">17</a></td>
+            <td><a href="./eventdetails.html">18</a></td>
+            <td><a href="./eventdetails.html">19</a></td>
+            <td><a href="./eventdetails.html">20</a></td>
+            <td><a href="./eventdetails.html">21</a></td>
+            <td><a href="./eventdetails.html">22</a></td>
+        </tr>
+        <tr>
+            <td><a href="./eventdetails.html">23</a></td>
+            <td><a href="./eventdetails.html">24</a></td>
+            <td><a href="./eventdetails.html">25</a></td>
+            <td><a href="./eventdetails.html">26</a></td>
+            <td><a href="./eventdetails.html">27</a></td>
+            <td><a href="./eventdetails.html">28</a></td>
+            <td><a href="./eventdetails.html">29</a></td>
+        </tr>
+        <tr>
+            <td><a href="./eventdetails.html">30</a></td>
+            <td><a href="./eventdetails.html">31</a></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <hr>
+    <h3>Upcoming Events</h3>
+    <div id="eventList"></div>
+    <a href="./index.html">Home</a>
+<script src="js/events.js"></script>
+</body>
+</html>

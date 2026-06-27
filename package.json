@@ -1,0 +1,23 @@
+{
+  "name": "campus-buzz",
+  "version": "1.0.0",
+  "description": "Campus community platform for news, events, and complaints",
+  "main": "BACKEND/server.js",
+  "scripts": {
+    "start": "node BACKEND/server.js",
+    "dev": "node BACKEND/server.js"
+  },
+  "keywords": [
+    "campus",
+    "community",
+    "events",
+    "posts",
+    "complaints"
+  ],
+  "author": "Ashutosh Dewangan",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  }
+}
