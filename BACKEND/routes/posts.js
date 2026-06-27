@@ -66,4 +66,21 @@ router.delete("/:index", (req, res) => {
     }
 });
 
+// Extend post expiry by 30 minutes (1800000 ms)
+router.post("/:index/extend", (req, res) => {
+    const index = parseInt(req.params.index);
+    if (index >= 0 && index < posts.length) {
+        let post = posts[index];
+        if (post.expiry) {
+            // Extend by 30 minutes
+            post.expiry = Number(post.expiry) + 1800000;
+            res.json({ success: true, message: "Post expiry extended successfully", post });
+        } else {
+            res.status(400).json({ success: false, message: "Post does not have an expiry timer" });
+        }
+    } else {
+        res.status(400).json({ success: false, message: "Invalid index" });
+    }
+});
+
 module.exports = router;

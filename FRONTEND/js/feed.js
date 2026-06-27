@@ -49,6 +49,8 @@ function displayPosts() {
         ${escapeHtml(post.hashtag)}
         </p>
         <p id="timer-${index}" class="timer"></p>          
+        ${post.expiry && post.owner === currentUser.email ?
+        `<button class="secondary" onclick="extendPost(${index})">Extend 30m</button>` : ""}
         ${post.owner === currentUser.email ?
         `<button class="danger" onclick="deletePost(${index})">Delete</button>` : ""}
         `;
@@ -68,6 +70,11 @@ function updateTimers() {
                 if (remainingTime > 0) {
                     timerElement.innerText =
                         "Expires in: " + remainingTime + " sec";
+                    if (remainingTime < 300) {
+                        timerElement.classList.add("timer-warning");
+                    } else {
+                        timerElement.classList.remove("timer-warning");
+                    }
                 }
                 else {
                     posts.splice(i, 1);
@@ -149,6 +156,24 @@ async function deletePost(index) {
             console.error("Error deleting post:", error);
             alert("Unable to delete post. Please try again.");
         }
+    }
+}
+
+async function extendPost(index) {
+    try {
+        const response = await fetch(`${API_BASE}/api/posts/${index}/extend`, {
+            method: "POST"
+        });
+        if (!response.ok) {
+            throw new Error("Failed to extend post on server");
+        }
+        const data = await response.json();
+        posts[index].expiry = data.post.expiry;
+        displayPosts();
+        alert("Post timer extended by 30 minutes!");
+    } catch (error) {
+        console.error("Error extending post:", error);
+        alert("Unable to extend post. Please try again.");
     }
 }
 

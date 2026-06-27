@@ -609,3 +609,16 @@ label {
     opacity: 0.6;
     pointer-events: none;
 }
+
+/* Pulsing Timer Warning Animation */
+.timer-warning {
+    color: var(--danger-color) !important;
+    font-weight: 700;
+    animation: timer-pulse-warn 1.5s infinite;
+}
+
+@keyframes timer-pulse-warn {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
