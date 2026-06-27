@@ -46,4 +46,15 @@ router.post("/", (req, res) => {
     });
 });
 
+// Resolve/update status of a complaint by index
+router.put("/:index", (req, res) => {
+    const index = parseInt(req.params.index);
+    if (index >= 0 && index < complaints.length) {
+        complaints[index].status = req.body.status || "Resolved";
+        res.json({ success: true, message: "Complaint updated successfully", complaint: complaints[index] });
+    } else {
+        res.status(400).json({ success: false, message: "Invalid index" });
+    }
+});
+
 module.exports = router;

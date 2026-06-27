@@ -55,4 +55,15 @@ router.post("/", (req, res) => {
     });
 });
 
+// DELETE a post by index
+router.delete("/:index", (req, res) => {
+    const index = parseInt(req.params.index);
+    if (index >= 0 && index < posts.length) {
+        posts.splice(index, 1);
+        res.json({ success: true, message: "Post deleted successfully" });
+    } else {
+        res.status(400).json({ success: false, message: "Invalid index" });
+    }
+});
+
 module.exports = router;
