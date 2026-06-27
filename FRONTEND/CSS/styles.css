@@ -26,10 +26,17 @@ body {
 }
 
 header {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+   header {
+    /* Blends a 70% opacity gradient over your image */
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.7), rgba(129, 140, 248, 0.7)), 
+                url('../assets/images/background.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     color: white;
-    padding: 2rem 1.5rem;
+    padding: 4rem 1.5rem; /* Increased padding gives the background image more breathing room */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 }
 
 header h1 {
