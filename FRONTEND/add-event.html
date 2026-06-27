@@ -3,29 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Event</title>
+    <title>Campus Buzz - Add Event</title>
+    <link rel="stylesheet" href="CSS/styles.css">
+    <script src="js/app.js" defer></script>
+    <script src="js/add-event.js" defer></script>
 </head>
 <body>
-    <link rel = "stylesheet" href = "./CSS/styles.css"> 
-    <button onclick="logout()">Logout</button>
-    <h1>Add Event</h1>
-    <form id="eventForm">
-        <label for="title">Event Title:</label><br>
-        <input type="text" id="title" name="title" required><br><br>
-        <label for="club">Organizing Club:</label><br>
-        <input type="text" id="club" name="club" required><br><br>
-        <label for="date">Event Date:</label><br>
-        <input type="date" id="date" name="date" required><br><br>
-        <label for="time">Event Time:</label><br>
-        <input type="time" id="time" name="time" required><br><br>
-        <label for="venue">Venue:</label><br>
-        <input type="text" id="venue" name="venue" required><br><br>
-        <label for="description">Description:</label><br>
-        <textarea id="description" name="description" rows="5" cols="30" required></textarea><br><br>
-        <label for="registration">Registration:</label><br>
-        <textarea id="registration" name="registration" rows="5" cols="30" required></textarea><br><br>
-        <button type="submit">Add Event</button>
-    </form>
-    <script src="js/add-event.js"></script>
+    <header class="app-header">
+        <div>
+            <a class="brand" href="index.html">Campus Buzz</a>
+            <p>Add Event</p>
+        </div>
+        <button type="button" id="logoutBtn" class="secondary-button">Logout</button>
+    </header>
+
+    <main class="page-section narrow">
+        <form id="eventForm" class="tool-panel form-panel">
+            <h1>Add Event</h1>
+
+            <label for="title">Event Title</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="club">Organizing Club</label>
+            <input type="text" id="club" name="club" required>
+
+            <label for="date">Event Date</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="time">Event Time</label>
+            <input type="time" id="time" name="time" required>
+
+            <label for="venue">Venue</label>
+            <input type="text" id="venue" name="venue" required>
+
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="5" required></textarea>
+
+            <label for="registration">Registration Details</label>
+            <textarea id="registration" name="registration" rows="4" placeholder="Optional link, desk, or contact"></textarea>
+
+            <div class="form-actions">
+                <a class="button-link secondary" href="events.html">Cancel</a>
+                <button type="submit">Add Event</button>
+            </div>
+        </form>
+    </main>
 </body>
 </html>

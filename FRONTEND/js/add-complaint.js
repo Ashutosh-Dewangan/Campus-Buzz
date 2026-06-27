@@ -1,45 +1,46 @@
-let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-if (!currentUser) {
-    alert("Please login first");
-    window.location.href = "login.html";
-}
+const currentUser = CampusBuzz.requireAuth();
 
-if (currentUser.role !== "Student") {
-    alert("Only students can raise complaints");
-    window.location.href = "complaints.html";
-}
+if (currentUser) {
+    CampusBuzz.bindLogoutButton();
 
-document.getElementById("complaintForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
-
-    const newComplaint = {
-        title: document.getElementById("title").value,
-        text: document.getElementById("description").value,
-        location: document.getElementById("location").value,
-        status: "Pending",
-        owner: currentUser.email
-    };
-
-    try {
-        const response = await fetch("/complaints", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newComplaint)
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to save complaint: ${response.status}`);
-        }
-
-        alert("Complaint submitted successfully!");
+    if (currentUser.role !== "Student") {
+        alert("Only students can raise complaints.");
         window.location.href = "complaints.html";
-    } catch (error) {
-        console.error("Error submitting complaint:", error);
-        alert("Unable to save complaint. Please try again.");
-    }
-});
+    } else {
+        const complaintForm = document.getElementById("complaintForm");
 
-function logout() {
-    localStorage.removeItem("currentUser");
-    window.location.href = "login.html";
+        complaintForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const submitButton = complaintForm.querySelector("button[type='submit']");
+            const newComplaint = {
+                title: document.getElementById("title").value.trim(),
+                category: document.getElementById("category").value,
+                location: document.getElementById("location").value.trim(),
+                text: document.getElementById("description").value.trim(),
+                status: "Pending",
+                owner: currentUser.email
+            };
+
+            if (!newComplaint.title || !newComplaint.category || !newComplaint.text) {
+                alert("Please fill all required fields.");
+                return;
+            }
+
+            submitButton.disabled = true;
+
+            try {
+                await CampusBuzz.api("/complaints", {
+                    method: "POST",
+                    body: JSON.stringify(newComplaint)
+                });
+
+                window.location.href = "complaints.html";
+            } catch (error) {
+                console.error("Error submitting complaint:", error);
+                alert(error.message || "Unable to save complaint. Please try again.");
+                submitButton.disabled = false;
+            }
+        });
+    }
 }

@@ -1,14 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Chat Room</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Buzz - Chat Room</title>
+    <link rel="stylesheet" href="CSS/styles.css">
+    <script src="js/app.js" defer></script>
+    <script src="js/chat.js" defer></script>
 </head>
 <body>
-<link rel = "stylesheet" href = "./CSS/styles.css"> 
-<h1 id="chatTitle"></h1>
-<div id="chatBox"></div>
-<input type="text" id="message" placeholder="Type message">
-<button onclick="sendMessage()">Send</button>
-<script src="js/chat.js"></script>
+    <header class="app-header">
+        <div>
+            <a class="brand" href="index.html">Campus Buzz</a>
+            <p id="chatTitle">Chat Room</p>
+        </div>
+        <button type="button" id="logoutBtn" class="secondary-button">Logout</button>
+    </header>
+
+    <main class="page-section narrow">
+        <section class="chat-panel">
+            <div id="chatBox" class="chat-box" aria-live="polite"></div>
+            <form id="messageForm" class="chat-form">
+                <label class="sr-only" for="message">Message</label>
+                <input type="text" id="message" placeholder="Type message" autocomplete="off" required>
+                <button type="submit">Send</button>
+            </form>
+            <a class="button-link secondary" href="feed.html">Back to Feed</a>
+        </section>
+    </main>
 </body>
 </html>

@@ -1,171 +1,249 @@
-let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-if (!currentUser) {
-    alert("Please login first");
-    window.location.href = "login.html";
-}
-document.getElementById("userRole").innerText =
-    "Logged in as: " + currentUser.role;
-let posts = [];
+const currentUser = CampusBuzz.requireAuth();
 
-async function loadPosts() {
-    try {
-        const response = await fetch("/posts");
+if (currentUser) {
+    CampusBuzz.bindLogoutButton();
+    CampusBuzz.setText("userRole", "Logged in as: " + currentUser.role);
 
-        console.log("Status:", response.status);
+    let posts = [];
+    let activeFilter = "All";
 
-        if (!response.ok) {
-            throw new Error(`Failed to load posts: ${response.status} ${response.statusText}`);
+    const postForm = document.getElementById("postForm");
+    const postContainer = document.getElementById("postContainer");
+    const filterButtons = document.querySelectorAll(".filter-button");
+
+    postForm.addEventListener("submit", addPost);
+    postContainer.addEventListener("click", handlePostAction);
+
+    filterButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            activeFilter = button.dataset.filter;
+            filterButtons.forEach((item) => item.classList.remove("active"));
+            button.classList.add("active");
+            displayPosts();
+        });
+    });
+
+    loadPosts();
+    setInterval(updateTimers, 1000);
+
+    async function loadPosts() {
+        try {
+            posts = await CampusBuzz.api("/posts");
+            displayPosts();
+        } catch (error) {
+            console.error("Error loading posts:", error);
+            showEmptyState("Unable to load posts. Please try again later.");
         }
-
-        const data = await response.json();
-
-        console.log("Data:", data);
-
-        posts = data;
-
-        console.log("Posts:", posts);
-
-        displayPosts();
-
-    } catch (error) {
-        console.error("Error loading posts:", error);
-        alert("Unable to load posts. Please try again later.");
     }
-}
 
-function displayPosts() {
-    let postContainer = document.getElementById("postContainer");
-    postContainer.innerHTML = "";
-    posts.forEach(function(post, index) {
-        let postCard = document.createElement("div");
-        postCard.classList.add("post-card");
-        postCard.innerHTML = `
-        <h3>${escapeHtml(post.user)}</h3>
-        <h4>${escapeHtml(post.title)}</h4>
-        <p>${escapeHtml(post.content)}</p>
-        ${post.image ? `<img src="${escapeHtml(post.image)}" width="200" alt="Post image">` : ""}
-        <p class="hashtag-tag" onclick="handleHashtag('${escapeHtml(post.hashtag)}', '${escapeHtml(post.user)}')">
-        ${escapeHtml(post.hashtag)}
-        </p>
-        <p id="timer-${index}" class="timer"></p>          
-        ${post.owner === currentUser.email ?
-        `<button class="danger" onclick="deletePost(${index})">Delete</button>` : ""}
-        `;
-        postContainer.appendChild(postCard);
-        console.log(post.image);
-    });
-}
+    function displayPosts() {
+        postContainer.replaceChildren();
 
-function updateTimers() {
-    posts.forEach(function(post, index) {
-        if (post.expiry) {
-            let remainingTime = Math.floor((post.expiry - Date.now()) / 1000);
-            let timerElement = document.getElementById("timer-" + index);
-            if (timerElement) {
-                if (remainingTime > 0) {
-                    timerElement.innerText =
-                        "Expires in: " + remainingTime + " sec";
-                }
-                else {
-                    posts.splice(index, 1);
-                    displayPosts();
-                }
-            }
-        }
-    });
-}
+        const visiblePosts = activeFilter === "All"
+            ? posts
+            : posts.filter((post) => post.hashtag === activeFilter);
 
-async function addPost() {
-    try {
-        let username = document.getElementById("username").value;
-        let title = document.getElementById("postTitle").value;
-        let content = document.getElementById("content").value;
-        let image = document.getElementById("imageUrl").value;
-        let hashtag = document.getElementById("hashtag").value;
-        
-        if (!username || !title || !content || !hashtag) {
-            alert("Please fill all required fields");
+        if (visiblePosts.length === 0) {
+            showEmptyState("No posts to show right now.");
             return;
         }
-        
-        let newPost = {
-            user: username,
-            title: title,
-            content: content,
-            image: image,
-            hashtag: hashtag,
-            owner: currentUser.email,
-            expiry: null
-        };
-        
-        if (hashtag === "#foodsplit" || hashtag === "#cabsplit") {
-            newPost.expiry = Date.now() + 900000;
-        }
-        
-        const response = await fetch("/posts", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newPost)
+
+        visiblePosts.forEach((post) => {
+            postContainer.appendChild(createPostCard(post));
         });
-        
-        if (!response.ok) {
-            throw new Error(`Failed to save post: ${response.status} ${response.statusText}`);
+    }
+
+    function createPostCard(post) {
+        const postCard = document.createElement("article");
+        postCard.className = "post-card";
+
+        const author = document.createElement("p");
+        author.className = "meta-text";
+        author.textContent = post.user || "Campus member";
+
+        const title = document.createElement("h2");
+        title.textContent = post.title || "Untitled post";
+
+        const content = document.createElement("p");
+        content.textContent = post.content || "";
+
+        postCard.append(author, title, content);
+
+        if (post.image) {
+            const image = document.createElement("img");
+            image.src = post.image;
+            image.alt = post.title ? "Image for " + post.title : "Post image";
+            image.loading = "lazy";
+            postCard.appendChild(image);
         }
-        
-        posts.unshift(newPost);
-        document.getElementById("username").value = "";
-        document.getElementById("postTitle").value = "";
-        document.getElementById("content").value = "";
-        document.getElementById("imageUrl").value = "";
-        document.getElementById("hashtag").value = "";
-        displayPosts();
-        alert("Post created successfully!");
-        
-    } catch (error) {
-        console.error("Error adding post:", error);
-        alert("Unable to save post. Please try again.");
+
+        if (post.hashtag) {
+            const tag = document.createElement("button");
+            tag.type = "button";
+            tag.className = "hashtag-tag";
+            tag.dataset.action = "hashtag";
+            tag.dataset.hashtag = post.hashtag;
+            tag.dataset.user = post.user || "this student";
+            tag.textContent = post.hashtag;
+            postCard.appendChild(tag);
+        }
+
+        const timer = document.createElement("p");
+        timer.className = "timer";
+        timer.dataset.postId = String(post.id);
+        postCard.appendChild(timer);
+
+        if (post.owner === currentUser.email) {
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.className = "danger-button";
+            deleteButton.dataset.action = "delete";
+            deleteButton.dataset.postId = String(post.id);
+            deleteButton.textContent = "Delete";
+            postCard.appendChild(deleteButton);
+        }
+
+        updateTimerForPost(post, timer);
+        return postCard;
     }
-}
 
-function deletePost(index) {
-    if (confirm("Are you sure you want to delete this post?")) {
-        posts.splice(index, 1);
-        displayPosts();
+    function showEmptyState(message) {
+        const empty = document.createElement("p");
+        empty.className = "empty-state";
+        empty.textContent = message;
+        postContainer.replaceChildren(empty);
     }
-}
 
-function escapeHtml(text) {
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return text.replace(/[&<>"']/g, m => map[m]);
-}
+    function updateTimers() {
+        let changed = false;
+        const now = Date.now();
 
-loadPosts();
-setInterval(updateTimers, 1000);
+        posts.forEach((post) => {
+            if (!post.expiry) {
+                return;
+            }
 
-function logout() {
-    localStorage.removeItem("currentUser");
-    window.location.href = "login.html";
-}
+            if (Number(post.expiry) <= now) {
+                changed = true;
+                removeExpiredPost(post.id);
+                return;
+            }
 
-function handleHashtag(hashtag, user) {
-    if (
-        hashtag === "#foodsplit" ||
-        hashtag === "#cabsplit" ||
-        hashtag === "#resell"
-    ) {
-        localStorage.setItem("chatTopic", hashtag);
-        window.location.href = "chat.html";
+            const timer = document.querySelector('[data-post-id="' + post.id + '"]');
+            if (timer) {
+                updateTimerForPost(post, timer);
+            }
+        });
+
+        if (changed) {
+            displayPosts();
+        }
     }
-    else if (
-        hashtag === "#lost" ||
-        hashtag === "#found"
-    ) {
-        alert("Contact " + user + " directly.");
+
+    function updateTimerForPost(post, timerElement) {
+        if (!post.expiry) {
+            timerElement.textContent = "";
+            return;
+        }
+
+        const remainingSeconds = Math.max(0, Math.ceil((Number(post.expiry) - Date.now()) / 1000));
+        const minutes = Math.floor(remainingSeconds / 60);
+        const seconds = remainingSeconds % 60;
+        timerElement.textContent = "Expires in: " + minutes + "m " + String(seconds).padStart(2, "0") + "s";
+    }
+
+    async function removeExpiredPost(postId) {
+        posts = posts.filter((post) => post.id !== postId);
+
+        try {
+            await CampusBuzz.api("/posts/" + postId, { method: "DELETE" });
+        } catch (error) {
+            console.error("Expired post cleanup failed:", error);
+        }
+    }
+
+    async function addPost(event) {
+        event.preventDefault();
+
+        const username = document.getElementById("username").value.trim();
+        const title = document.getElementById("postTitle").value.trim();
+        const content = document.getElementById("content").value.trim();
+        const image = document.getElementById("imageUrl").value.trim();
+        const hashtag = document.getElementById("hashtag").value;
+
+        if (!username || !title || !content || !hashtag) {
+            alert("Please fill all required fields.");
+            return;
+        }
+
+        const newPost = {
+            user: username,
+            title,
+            content,
+            image,
+            hashtag,
+            owner: currentUser.email,
+            expiry: hashtag === "#foodsplit" || hashtag === "#cabsplit" ? Date.now() + 900000 : null
+        };
+
+        try {
+            const result = await CampusBuzz.api("/posts", {
+                method: "POST",
+                body: JSON.stringify(newPost)
+            });
+
+            posts.unshift(result.post);
+            postForm.reset();
+            activeFilter = "All";
+            filterButtons.forEach((button) => button.classList.toggle("active", button.dataset.filter === "All"));
+            displayPosts();
+        } catch (error) {
+            console.error("Error adding post:", error);
+            alert(error.message || "Unable to save post. Please try again.");
+        }
+    }
+
+    async function handlePostAction(event) {
+        const button = event.target.closest("[data-action]");
+
+        if (!button) {
+            return;
+        }
+
+        if (button.dataset.action === "hashtag") {
+            handleHashtag(button.dataset.hashtag, button.dataset.user);
+            return;
+        }
+
+        if (button.dataset.action === "delete") {
+            await deletePost(Number(button.dataset.postId));
+        }
+    }
+
+    async function deletePost(postId) {
+        if (!postId || !confirm("Delete this post?")) {
+            return;
+        }
+
+        try {
+            await CampusBuzz.api("/posts/" + postId, { method: "DELETE" });
+            posts = posts.filter((post) => post.id !== postId);
+            displayPosts();
+        } catch (error) {
+            console.error("Error deleting post:", error);
+            alert(error.message || "Unable to delete post. Please try again.");
+        }
+    }
+
+    function handleHashtag(hashtag, user) {
+        if (["#foodsplit", "#cabsplit", "#resell"].includes(hashtag)) {
+            localStorage.setItem("chatTopic", hashtag);
+            window.location.href = "chat.html";
+            return;
+        }
+
+        if (["#lost", "#found"].includes(hashtag)) {
+            alert("Contact " + user + " directly.");
+        }
     }
 }

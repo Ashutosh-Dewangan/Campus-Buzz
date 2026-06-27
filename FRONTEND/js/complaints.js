@@ -1,162 +1,127 @@
-let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-if (!currentUser) {
-    alert("Please login first");
-    window.location.href = "login.html";
-}
+const currentUser = CampusBuzz.requireAuth();
 
-let complaints = [];
+if (currentUser) {
+    CampusBuzz.bindLogoutButton();
 
-async function loadComplaints() {
-    try {
-        const response = await fetch("/complaints");
-        if (!response.ok) {
-            throw new Error(`Failed to load complaints: ${response.status} ${response.statusText}`);
-        }
-        complaints = await response.json();
+    let complaints = [];
+    let selectedStatus = "All";
+
+    const statusFilter = document.getElementById("statusFilter");
+    const complaintContainer = document.getElementById("complaintContainer");
+
+    statusFilter.addEventListener("change", () => {
+        selectedStatus = statusFilter.value;
         displayComplaints();
-    } catch (error) {
-        console.error("Error loading complaints:", error);
-        alert("Unable to load complaints. Please try again.");
-    }
-}
-
-function displayComplaints() {
-    let complaintContainer = document.getElementById("complaintContainer");
-    complaintContainer.innerHTML = "";
-    complaints.forEach(function(complaint, index) {
-        let complaintCard = document.createElement("div");
-        complaintCard.classList.add("complaint-card");
-        const statusClass = complaint.status.toLowerCase().replace(/\s+/g, '-');
-        complaintCard.innerHTML = `
-        <h3>${escapeHtml(complaint.title)}</h3>
-        <p>${escapeHtml(complaint.text)}</p>
-        <p><strong>Location:</strong> ${escapeHtml(complaint.location || 'Not specified')}</p>
-        <p><strong>Status:</strong> <span class="status ${statusClass}">${escapeHtml(complaint.status)}</span></p>
-        ${
-            complaint.owner === currentUser.email &&
-            complaint.status !== "Resolved"
-            ?
-            `<button class="success" onclick="resolveComplaint(${index})">Mark as Resolved</button>`
-            :
-            ""
-        }`;
-        complaintContainer.appendChild(complaintCard);
     });
-}
 
-async function addComplaint() {
-    try {
-        if (currentUser.role !== "Student") {
-            alert("Only students can raise complaints");
+    complaintContainer.addEventListener("click", async (event) => {
+        const button = event.target.closest("[data-action='resolve']");
+
+        if (!button) {
             return;
         }
-        
-        let title = document.getElementById("complaintTitle").value;
-        let text = document.getElementById("complaintText").value;
-        let location = document.getElementById("complaintLocation")?.value || "";
-        
-        if (!title || !text) {
-            alert("Please fill all required fields");
-            return;
-        }
-        
-        let newComplaint = {
-            title: title,
-            text: text,
-            location: location,
-            status: "Pending",
-            owner: currentUser.email
-        };
-        
-        const response = await fetch("/complaints", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newComplaint)
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Failed to save complaint: ${response.status} ${response.statusText}`);
-        }
-        
-        complaints.unshift(newComplaint);
-        document.getElementById("complaintTitle").value = "";
-        document.getElementById("complaintText").value = "";
-        if (document.getElementById("complaintLocation")) {
-            document.getElementById("complaintLocation").value = "";
-        }
-        displayComplaints();
-        alert("Complaint submitted successfully!");
-        
-    } catch (error) {
-        console.error("Error adding complaint:", error);
-        alert("Unable to save complaint. Please try again.");
-    }
-}
 
-function filterComplaints() {
-    try {
-        let selectedStatus = document.getElementById("statusFilter").value.trim();
-        if (selectedStatus === "All") {
+        await resolveComplaint(Number(button.dataset.complaintId));
+    });
+
+    loadComplaints();
+
+    async function loadComplaints() {
+        try {
+            complaints = await CampusBuzz.api("/complaints");
             displayComplaints();
-            return;
+        } catch (error) {
+            console.error("Error loading complaints:", error);
+            complaintContainer.replaceChildren(createEmptyState("Unable to load complaints. Please try again."));
         }
-        
-        let filteredComplaints = complaints.filter(function(complaint) {
-            return complaint.status === selectedStatus;
-        });
-        
-        let complaintContainer = document.getElementById("complaintContainer");
-        complaintContainer.innerHTML = "";
-        
-        if (filteredComplaints.length === 0) {
-            complaintContainer.innerHTML = "<p>No complaints found with this status.</p>";
-            return;
-        }
-        
-        filteredComplaints.forEach(function(complaint, index) {
-            let complaintCard = document.createElement("div");
-            complaintCard.classList.add("complaint-card");
-            const statusClass = complaint.status.toLowerCase().replace(/\s+/g, '-');
-            complaintCard.innerHTML = `
-                <h3>${escapeHtml(complaint.title)}</h3>
-                <p>${escapeHtml(complaint.text)}</p>
-                <p><strong>Location:</strong> ${escapeHtml(complaint.location || 'Not specified')}</p>
-                <p><strong>Status:</strong> <span class="status ${statusClass}">${escapeHtml(complaint.status)}</span></p>
-            `;
-            complaintContainer.appendChild(complaintCard);
-        });
-        
-    } catch (error) {
-        console.error("Error filtering complaints:", error);
     }
-}
 
-function escapeHtml(text) {
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return String(text).replace(/[&<>"']/g, m => map[m]);
-}
+    function displayComplaints() {
+        complaintContainer.replaceChildren();
 
-loadComplaints();
+        const visibleComplaints = selectedStatus === "All"
+            ? complaints
+            : complaints.filter((complaint) => complaint.status === selectedStatus);
 
-function logout() {
-    localStorage.removeItem("currentUser");
-    window.location.href = "login.html";
-}
-
-function resolveComplaint(index) {
-    try {
-        if (confirm("Mark this complaint as resolved?")) {
-            complaints[index].status = "Resolved";
-            displayComplaints();
-            alert("Complaint marked as resolved.");
+        if (visibleComplaints.length === 0) {
+            complaintContainer.appendChild(createEmptyState("No complaints found with this status."));
+            return;
         }
-    } catch (error) {
-        console.error("Error resolving complaint:", error);
+
+        visibleComplaints.forEach((complaint) => {
+            complaintContainer.appendChild(createComplaintCard(complaint));
+        });
+    }
+
+    function createComplaintCard(complaint) {
+        const card = document.createElement("article");
+        card.className = "complaint-card";
+
+        const title = document.createElement("h2");
+        title.textContent = complaint.title;
+
+        const text = document.createElement("p");
+        text.textContent = complaint.text;
+
+        const category = createDetailLine("Category", complaint.category || "Not specified");
+        const location = createDetailLine("Location", complaint.location || "Not specified");
+
+        const statusLine = document.createElement("p");
+        const statusLabel = document.createElement("strong");
+        const statusBadge = document.createElement("span");
+        statusLabel.textContent = "Status: ";
+        statusBadge.className = "status status-" + String(complaint.status || "Pending").toLowerCase().replace(/\s+/g, "-");
+        statusBadge.textContent = complaint.status || "Pending";
+        statusLine.append(statusLabel, statusBadge);
+
+        card.append(title, text, category, location, statusLine);
+
+        const canResolve = complaint.status !== "Resolved" && (complaint.owner === currentUser.email || currentUser.role === "Admin");
+
+        if (canResolve) {
+            const resolveButton = document.createElement("button");
+            resolveButton.type = "button";
+            resolveButton.className = "success-button";
+            resolveButton.dataset.action = "resolve";
+            resolveButton.dataset.complaintId = String(complaint.id);
+            resolveButton.textContent = "Mark as Resolved";
+            card.appendChild(resolveButton);
+        }
+
+        return card;
+    }
+
+    function createDetailLine(label, value) {
+        const line = document.createElement("p");
+        const strong = document.createElement("strong");
+        strong.textContent = label + ": ";
+        line.append(strong, document.createTextNode(value));
+        return line;
+    }
+
+    async function resolveComplaint(complaintId) {
+        if (!complaintId || !confirm("Mark this complaint as resolved?")) {
+            return;
+        }
+
+        try {
+            const result = await CampusBuzz.api("/complaints/" + complaintId, {
+                method: "PATCH",
+                body: JSON.stringify({ status: "Resolved" })
+            });
+
+            complaints = complaints.map((complaint) => complaint.id === complaintId ? result.complaint : complaint);
+            displayComplaints();
+        } catch (error) {
+            console.error("Error resolving complaint:", error);
+            alert(error.message || "Unable to update complaint. Please try again.");
+        }
+    }
+
+    function createEmptyState(message) {
+        const empty = document.createElement("p");
+        empty.className = "empty-state";
+        empty.textContent = message;
+        return empty;
     }
 }
