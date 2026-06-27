@@ -43,33 +43,28 @@ header {
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
     text-align: center;
 }
-
 header h1 {
     font-size: 2.75rem;
     font-weight: 700;
     margin-bottom: 0.75rem;
     letter-spacing: -0.02em;
 }
-
 header p {
     font-size: 1.15rem;
     opacity: 0.9;
     max-width: 600px;
     margin: 0 auto;
 }
-
 hr {
     border: none;
     border-top: 1px solid var(--border-color);
     margin: 2.5rem 0;
 }
-
 main {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2.5rem 1.5rem;
 }
-
 footer {
     background-color: var(--dark-bg);
     color: white;
@@ -77,14 +72,12 @@ footer {
     padding: 3rem 2rem;
     margin-top: 5rem;
 }
-
 footer h3 {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
     color: white;
 }
-
 /* ==========================================================================
    Landing Page Components
    ========================================================================== */
@@ -92,7 +85,6 @@ footer h3 {
     text-align: center;
     padding: 3.5rem 0;
 }
-
 .hero h2 {
     font-size: 2.25rem;
     margin-bottom: 1rem;
@@ -100,7 +92,6 @@ footer h3 {
     font-weight: 700;
     letter-spacing: -0.01em;
 }
-
 .hero p {
     font-size: 1.15rem;
     color: var(--text-secondary);
@@ -109,26 +100,22 @@ footer h3 {
     margin-left: auto;
     margin-right: auto;
 }
-
 .about {
     background-color: white;
     padding: 2.5rem;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
 }
-
 .about h2 {
     color: var(--primary-color);
     margin-bottom: 1rem;
 }
-
 .features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 2rem;
     margin-top: 2.5rem;
 }
-
 .feature {
     background-color: white;
     padding: 2.5rem;
@@ -136,28 +123,23 @@ footer h3 {
     box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02), 0 2px 6px rgba(15, 23, 42, 0.01);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
 }
-
 .feature:hover {
     transform: translateY(-5px);
     box-shadow: 0 20px 35px rgba(15, 23, 42, 0.06);
 }
-
 .feature h3 {
     font-size: 1.35rem;
     margin-bottom: 0.75rem;
     color: var(--primary-color);
 }
-
 .feature p {
     color: var(--text-secondary);
 }
-
 .statistics {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 2rem;
 }
-
 .stats {
     background-color: white;
     padding: 2.5rem;
@@ -165,38 +147,32 @@ footer h3 {
     text-align: center;
     box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
 }
-
 .stats h3 {
     font-size: 1.75rem;
     font-weight: 700;
     color: var(--primary-color);
 }
-
 /* ==========================================================================
    Navigation & Action Controls
    ========================================================================== */
 nav {
     margin: 2rem 0;
 }
-
 nav ul {
     list-style: none;
     display: flex;
     gap: 2rem;
     flex-wrap: wrap;
 }
-
 nav a {
     color: var(--primary-color);
     text-decoration: none;
     font-weight: 500;
     transition: color 0.25s ease;
 }
-
 nav a:hover {
     color: var(--secondary-color);
 }
-
 button, a button {
     background-color: var(--primary-color);
     color: white;
@@ -209,40 +185,32 @@ button, a button {
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     display: inline-block;
 }
-
 button:hover, a button:hover {
     background-color: #115e59; /* Slightly deeper teal for state change contrast */
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(15, 118, 110, 0.15);
 }
-
 button:active, a button:active {
     transform: translateY(0);
 }
-
 button.secondary {
     background-color: var(--border-color);
     color: var(--text-primary);
 }
-
 button.secondary:hover {
     background-color: #cbd5e1;
     box-shadow: none;
 }
-
 button.danger {
     background-color: var(--danger-color);
 }
-
 button.danger:hover {
     background-color: #e11d48;
     box-shadow: 0 6px 15px rgba(244, 63, 94, 0.2);
 }
-
 button.success {
     background-color: var(--success-color);
 }
-
 button.success:hover {
     background-color: #059669;
     box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2);
@@ -471,23 +439,115 @@ label {
 /* ==========================================================================
    Login Access Interface
    ========================================================================== */
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Deep indigo to soft purple gradient for a modern tech/campus feel */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+}
+
 .login-container {
-    max-width: 420px;
-    margin: 6rem auto;
-    background-color: white;
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(15, 23, 42, 0.04);
+    width: 100%;
+    max-width: 400px;
 }
 
-.login-container h2 {
-    color: var(--primary-color);
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 1.75rem;
+/* Card Layout */
+.login-card {
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Brand Header */
+.brand-header {
     text-align: center;
+    margin-bottom: 32px;
 }
 
+.brand-header h1 {
+    font-size: 2rem;
+    color: #2d3748;
+    font-weight: 600;
+}
+
+/* Colorful pop for the 'Buzz' text */
+.brand-header h1 span {
+    color: #667eea;
+}
+
+.brand-header p {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-top: 6px;
+}
+
+/* Input Fields & Labels */
+.input-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    color: #4a5568;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #2d3748;
+    outline: none;
+    transition: all 0.25s ease;
+}
+
+/* Smooth ring effect when clicking into an input */
+.input-group input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+/* Modern Gradient Button */
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Interactive feedback on hover and press */
+.login-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.login-btn:active {
+    transform: translateY(1px);
+}
 /* ==========================================================================
    Responsive Adaptations
    ========================================================================== */

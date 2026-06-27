@@ -1,14 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Campus Buzz</title>
+    <!-- Modern, clean font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./CSS/styles.css"> 
 </head>
 <body>
-    <link rel = "stylesheet" href = "./CSS/styles.css"> 
-    <h1>Campus Buzz Login</h1>
-    <input type="text" id="rollNo" placeholder="Enter Roll Number">
-    <input type="email" id="email" placeholder="Enter Institute Email">
-    <button onclick="login()">Login</button>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="brand-header">
+                <h1>Campus <span>Buzz</span></h1>
+                <p>Welcome back! Please enter your campus credentials.</p>
+            </div>
+            
+            <form id="loginForm" onsubmit="event.preventDefault(); login();">
+                <div class="input-group">
+                    <label for="rollNo">Roll Number</label>
+                    <input type="text" id="rollNo" placeholder="e.g., 21BCE001" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="email">Institute Email</label>
+                    <input type="email" id="email" placeholder="yourname@institute.edu" required>
+                </div>
+                
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+        </div>
+    </div>
     <script src="js/login.js"></script>
 </body>
 </html>
