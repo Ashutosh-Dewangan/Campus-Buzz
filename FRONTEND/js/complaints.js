@@ -8,7 +8,8 @@ let complaints = [];
 
 async function loadComplaints() {
     try {
-        const response = await fetch("/complaints");
+        // namespaced API path
+        const response = await fetch("/api/complaints");
         if (!response.ok) {
             throw new Error(`Failed to load complaints: ${response.status} ${response.statusText}`);
         }
@@ -68,7 +69,7 @@ async function addComplaint() {
             owner: currentUser.email
         };
         
-        const response = await fetch("/complaints", {
+        const response = await fetch("/api/complaints", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newComplaint)
@@ -139,7 +140,7 @@ function escapeHtml(text) {
         '"': '&quot;',
         "'": '&#039;'
     };
-    return String(text).replace(/[&<>"']/g, m => map[m]);
+    return String(text).replace(/[&<>\"']/g, m => map[m]);
 }
 
 loadComplaints();

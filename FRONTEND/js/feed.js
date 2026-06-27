@@ -9,7 +9,8 @@ let posts = [];
 
 async function loadPosts() {
     try {
-        const response = await fetch("/posts");
+        // namespaced API path to match backend
+        const response = await fetch("/api/posts");
 
         console.log("Status:", response.status);
 
@@ -102,7 +103,8 @@ async function addPost() {
             newPost.expiry = Date.now() + 900000;
         }
         
-        const response = await fetch("/posts", {
+        // POST to namespaced API path
+        const response = await fetch("/api/posts", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newPost)
@@ -142,7 +144,7 @@ function escapeHtml(text) {
         '"': '&quot;',
         "'": '&#039;'
     };
-    return text.replace(/[&<>"']/g, m => map[m]);
+    return String(text).replace(/[&<>\"']/g, m => map[m]);
 }
 
 loadPosts();
