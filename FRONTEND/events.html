@@ -4,113 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Buzz - Events</title>
-    <link rel="stylesheet" href="CSS/styles.css">
-    <script src="js/app.js" defer></script>
-    <script src="js/events.js" defer></script>
 </head>
 <body>
-    <header class="app-header">
-        <div>
-            <a class="brand" href="index.html">Campus Buzz</a>
-            <p>Events Calendar</p>
-        </div>
-        <button type="button" id="logoutBtn" class="secondary-button">Logout</button>
-    </header>
+    <link rel = "stylesheet" href = "./CSS/styles.css"> 
+    <h1>Campus Buzz</h1>
+    <button onclick="logout()">Logout</button>
+    <h2>Events Calendar</h2>
 
-    <div class="app-layout">
         <aside class="sidebar">
-            <nav aria-label="App navigation">
-                <a href="feed.html">Buzz Feed</a>
-                <a href="events.html" aria-current="page">Events</a>
-                <a href="complaints.html">Complaints</a>
-                <a href="index.html">Home</a>
+            <nav>
+                <a href="./feed.html">Buzz Feed</a>
+                <a href="./events.html">Events</a>
+                <a href="./complaints.html">Complaints</a>
+                <a href="./index.html">Home</a>
             </nav>
         </aside>
-
-        <main class="content">
-            <section class="section-header split-header">
-                <div>
-                    <h1>July 2026</h1>
-                    <p id="eventCount">Total Events: 0</p>
-                </div>
-                <a class="button-link" id="addEventLink" href="add-event.html">Add Event</a>
-            </section>
-
-            <section class="tool-panel search-panel">
-                <label for="eventSearch">Search by day in July</label>
-                <div class="inline-controls">
-                    <input type="number" id="eventSearch" min="1" max="31" placeholder="7">
-                    <button type="button" id="searchEventBtn">Search</button>
-                </div>
-                <div id="searchResult" class="result-box" aria-live="polite"></div>
-            </section>
-
-            <table class="calendar" aria-label="July 2026 calendar">
-                <thead>
-                    <tr>
-                        <th>Sun</th>
-                        <th>Mon</th>
-                        <th>Tue</th>
-                        <th>Wed</th>
-                        <th>Thu</th>
-                        <th>Fri</th>
-                        <th>Sat</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><a href="eventdetails.html" data-day="1">1</a></td>
-                        <td><a href="eventdetails.html" data-day="2">2</a></td>
-                        <td><a href="eventdetails.html" data-day="3">3</a></td>
-                        <td><a href="eventdetails.html" data-day="4">4</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="eventdetails.html" data-day="5">5</a></td>
-                        <td><a href="eventdetails.html" data-day="6">6</a></td>
-                        <td><a href="eventdetails.html" data-day="7">7</a></td>
-                        <td><a href="eventdetails.html" data-day="8">8</a></td>
-                        <td><a href="eventdetails.html" data-day="9">9</a></td>
-                        <td><a href="eventdetails.html" data-day="10">10</a></td>
-                        <td><a href="eventdetails.html" data-day="11">11</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="eventdetails.html" data-day="12">12</a></td>
-                        <td><a href="eventdetails.html" data-day="13">13</a></td>
-                        <td><a href="eventdetails.html" data-day="14">14</a></td>
-                        <td><a href="eventdetails.html" data-day="15">15</a></td>
-                        <td><a href="eventdetails.html" data-day="16">16</a></td>
-                        <td><a href="eventdetails.html" data-day="17">17</a></td>
-                        <td><a href="eventdetails.html" data-day="18">18</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="eventdetails.html" data-day="19">19</a></td>
-                        <td><a href="eventdetails.html" data-day="20">20</a></td>
-                        <td><a href="eventdetails.html" data-day="21">21</a></td>
-                        <td><a href="eventdetails.html" data-day="22">22</a></td>
-                        <td><a href="eventdetails.html" data-day="23">23</a></td>
-                        <td><a href="eventdetails.html" data-day="24">24</a></td>
-                        <td><a href="eventdetails.html" data-day="25">25</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="eventdetails.html" data-day="26">26</a></td>
-                        <td><a href="eventdetails.html" data-day="27">27</a></td>
-                        <td><a href="eventdetails.html" data-day="28">28</a></td>
-                        <td><a href="eventdetails.html" data-day="29">29</a></td>
-                        <td><a href="eventdetails.html" data-day="30">30</a></td>
-                        <td><a href="eventdetails.html" data-day="31">31</a></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <section>
-                <h2>Upcoming Events</h2>
-                <div id="eventList" class="card-list" aria-live="polite"></div>
-            </section>
-        </main>
-    </div>
+    <hr>
+    <h3>July 2026</h3>
+    <p id="eventCount"></p>
+    <a href="add-event.html">
+    <button id="add-event-btn">+ Add Event</button>
+    </a>
+    <button onclick="searchEvent()">Search Event</button>
+    <div id="searchResult"></div>
+    <table class = "calendar">
+        <tr>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a href="./eventdetails.html">1</a></td>
+        </tr>
+        <tr>
+            <td><a href="./eventdetails.html">2</a></td>
+            <td><a href="./eventdetails.html">3</a></td>
+            <td><a href="./eventdetails.html">4</a></td>
+            <td><a href="./eventdetails.html">5</a></td>
+            <td><a href="./eventdetails.html">6</a></td>
+            <td><a href="./eventdetails.html">7</a></td>
+            <td><a href="./eventdetails.html">8</a></td>
+        </tr>
+        <tr>
+            <td><a href="./eventdetails.html">9</a></td>
+            <td><a href="./eventdetails.html">10</a></td>
+            <td><a href="./eventdetails.html">11</a></td>
+            <td><a href="./eventdetails.html">12</a></td>
+            <td><a href="./eventdetails.html">13</a></td>
+            <td><a href="./eventdetails.html">14</a></td>
+            <td><a href="./eventdetails.html">15</a></td>
+        </tr>
+        <tr>
+            <td><a href="./eventdetails.html">16</a></td>
+            <td><a href="./eventdetails.html">17</a></td>
+            <td><a href="./eventdetails.html">18</a></td>
+            <td><a href="./eventdetails.html">19</a></td>
+            <td><a href="./eventdetails.html">20</a></td>
+            <td><a href="./eventdetails.html">21</a></td>
+            <td><a href="./eventdetails.html">22</a></td>
+        </tr>
+        <tr>
+            <td><a href="./eventdetails.html">23</a></td>
+            <td><a href="./eventdetails.html">24</a></td>
+            <td><a href="./eventdetails.html">25</a></td>
+            <td><a href="./eventdetails.html">26</a></td>
+            <td><a href="./eventdetails.html">27</a></td>
+            <td><a href="./eventdetails.html">28</a></td>
+            <td><a href="./eventdetails.html">29</a></td>
+        </tr>
+        <tr>
+            <td><a href="./eventdetails.html">30</a></td>
+            <td><a href="./eventdetails.html">31</a></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <hr>
+    <h3>Upcoming Events</h3>
+    <div id="eventList"></div>
+    <a href="./index.html">Home</a>
+<script src="js/events.js"></script>
 </body>
 </html>

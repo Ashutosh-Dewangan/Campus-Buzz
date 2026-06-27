@@ -4,73 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Buzz - Feed</title>
-    <link rel="stylesheet" href="CSS/styles.css">
-    <script src="js/app.js" defer></script>
-    <script src="js/feed.js" defer></script>
 </head>
 <body>
-    <header class="app-header">
-        <div>
-            <a class="brand" href="index.html">Campus Buzz</a>
-            <p id="userRole"></p>
-        </div>
-        <button type="button" id="logoutBtn" class="secondary-button">Logout</button>
-    </header>
-
-    <div class="app-layout">
+    <link rel = "stylesheet" href = "./CSS/styles.css"> 
+    <h1>Buzz feed</h1>
+    <h2>Let's check what is going on in the campus</h2>
+    <hr />
+    <p id="userRole"></p>
+    <button onclick="logout()">Logout</button>
+    <div class="container">
         <aside class="sidebar">
-            <nav aria-label="App navigation">
-                <a href="feed.html" aria-current="page">Buzz Feed</a>
-                <a href="events.html">Events</a>
-                <a href="complaints.html">Complaints</a>
-                <a href="index.html">Home</a>
+            <nav>
+                <a href="./feed.html">Buzz Feed</a>
+                <a href="./events.html">Events</a>
+                <a href="./complaints.html">Complaints</a>
+                <a href="./index.html">Home</a>
             </nav>
         </aside>
-
         <main class="content">
-            <section class="section-header">
-                <h1>Buzz Feed</h1>
-                <p>See what is happening around campus today.</p>
+            <div class="header">
+            <div>
+                <h1>Hey Ashutosh 👋</h1>
+                <p>What's the campus buzzing about today?</p>
+            </div>
+            </div>
+            <section class="new-post">
+                <input type="text" id="username" placeholder="Your name">
+                <input type="text" id="postTitle" placeholder="Post title">
+                <textarea id="content" placeholder="Write description"></textarea>
+                <input type="text" id="imageUrl" placeholder="Paste image URL">
+               <select id="hashtag">
+                 <option value="">Select Hashtag</option>
+                 <option>#foodsplit</option>
+                 <option>#cabsplit</option>
+                 <option>#resell</option>
+                 <option>#lost</option>
+                 <option>#found</option>
+               </select>
+            <button onclick="addPost()">Post</button>
             </section>
-
-            <form id="postForm" class="tool-panel">
-                <h2>Create Post</h2>
-                <label for="username">Your name</label>
-                <input type="text" id="username" placeholder="Your name" required>
-
-                <label for="postTitle">Post title</label>
-                <input type="text" id="postTitle" placeholder="Post title" required>
-
-                <label for="content">Description</label>
-                <textarea id="content" placeholder="Write description" required></textarea>
-
-                <label for="imageUrl">Image URL</label>
-                <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg">
-
-                <label for="hashtag">Hashtag</label>
-                <select id="hashtag" required>
-                    <option value="">Select hashtag</option>
-                    <option value="#foodsplit">#foodsplit</option>
-                    <option value="#cabsplit">#cabsplit</option>
-                    <option value="#resell">#resell</option>
-                    <option value="#lost">#lost</option>
-                    <option value="#found">#found</option>
-                </select>
-
-                <button type="submit">Post</button>
-            </form>
-
-            <section class="filter-row" aria-label="Post filters">
-                <button type="button" class="filter-button active" data-filter="All">All</button>
-                <button type="button" class="filter-button" data-filter="#foodsplit">#foodsplit</button>
-                <button type="button" class="filter-button" data-filter="#cabsplit">#cabsplit</button>
-                <button type="button" class="filter-button" data-filter="#resell">#resell</button>
-                <button type="button" class="filter-button" data-filter="#lost">#lost</button>
-                <button type="button" class="filter-button" data-filter="#found">#found</button>
+            <section class="hashtags">
+                <button>All</button>
+                <button>#foodsplit</button>
+                <button>#cabsplit</button>
+                <button>#resell</button>
+                <button>#lost</button>
+                <button>#found</button>
             </section>
-
-            <section id="postContainer" class="card-list" aria-live="polite"></section>
+            <div class="posts" id="postContainer"></div>
         </main>
     </div>
+    <script src="js/feed.js"></script>       
 </body>
 </html>

@@ -84,16 +84,16 @@ async function addPost() {
         let hashtag = document.getElementById("hashtag").value;
         
         if (!username || !title || !content || !hashtag) {
-            alert("Please fill all required fields.");
+            alert("Please fill all required fields");
             return;
         }
         
         let newPost = {
             user: username,
-            title,
-            content,
-            image,
-            hashtag,
+            title: title,
+            content: content,
+            image: image,
+            hashtag: hashtag,
             owner: currentUser.email,
             expiry: null
         };
@@ -111,7 +111,7 @@ async function addPost() {
         if (!response.ok) {
             throw new Error(`Failed to save post: ${response.status} ${response.statusText}`);
         }
-        
+
         posts.unshift(newPost);
         document.getElementById("username").value = "";
         document.getElementById("postTitle").value = "";

@@ -1,26 +1,24 @@
-const currentUser = CampusBuzz.requireAuth();
+let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+if (!currentUser) {
+    alert("Please login first");
+    window.location.href = "login.html";
+}
 
-if (currentUser) {
-    CampusBuzz.bindLogoutButton();
+if (currentUser.role !== "Student") {
+    alert("Only students can raise complaints");
+    window.location.href = "complaints.html";
+}
 
-    if (currentUser.role !== "Student") {
-        alert("Only students can raise complaints.");
-        window.location.href = "complaints.html";
-    } else {
-        const complaintForm = document.getElementById("complaintForm");
+document.getElementById("complaintForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
 
-        complaintForm.addEventListener("submit", async (event) => {
-            event.preventDefault();
-
-            const submitButton = complaintForm.querySelector("button[type='submit']");
-            const newComplaint = {
-                title: document.getElementById("title").value.trim(),
-                category: document.getElementById("category").value,
-                location: document.getElementById("location").value.trim(),
-                text: document.getElementById("description").value.trim(),
-                status: "Pending",
-                owner: currentUser.email
-            };
+    const newComplaint = {
+        title: document.getElementById("title").value,
+        text: document.getElementById("description").value,
+        location: document.getElementById("location").value,
+        status: "Pending",
+        owner: currentUser.email
+    };
 
     try {
         const response = await fetch("/complaints", {
@@ -29,12 +27,20 @@ if (currentUser) {
             body: JSON.stringify(newComplaint)
         });
 
-                window.location.href = "complaints.html";
-            } catch (error) {
-                console.error("Error submitting complaint:", error);
-                alert(error.message || "Unable to save complaint. Please try again.");
-                submitButton.disabled = false;
-            }
-        });
+        if (!response.ok) {
+            throw new Error(`Failed to save complaint: ${response.status}`);
+        }
+
+        alert("Complaint submitted successfully!");
+        window.location.href = "complaints.html";
+
+    } catch (error) {
+        console.error("Error submitting complaint:", error);
+        alert("Unable to save complaint. Please try again.");
     }
+});
+
+function logout() {
+    localStorage.removeItem("currentUser");
+    window.location.href = "login.html";
 }

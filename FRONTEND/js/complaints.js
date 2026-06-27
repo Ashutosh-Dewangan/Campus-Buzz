@@ -1,30 +1,10 @@
-const currentUser = CampusBuzz.requireAuth();
+let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+if (!currentUser) {
+    alert("Please login first");
+    window.location.href = "login.html";
+}
 
-if (currentUser) {
-    CampusBuzz.bindLogoutButton();
-
-    let complaints = [];
-    let selectedStatus = "All";
-
-    const statusFilter = document.getElementById("statusFilter");
-    const complaintContainer = document.getElementById("complaintContainer");
-
-    statusFilter.addEventListener("change", () => {
-        selectedStatus = statusFilter.value;
-        displayComplaints();
-    });
-
-    complaintContainer.addEventListener("click", async (event) => {
-        const button = event.target.closest("[data-action='resolve']");
-
-        if (!button) {
-            return;
-        }
-
-        await resolveComplaint(Number(button.dataset.complaintId));
-    });
-
-    loadComplaints();
+let complaints = [];
 
 async function loadComplaints() {
     try {
@@ -40,17 +20,46 @@ async function loadComplaints() {
     }
 }
 
-    function displayComplaints() {
-        complaintContainer.replaceChildren();
+function displayComplaints() {
+    let complaintContainer = document.getElementById("complaintContainer");
+    complaintContainer.innerHTML = "";
+    complaints.forEach(function(complaint, index) {
+        let complaintCard = document.createElement("div");
+        complaintCard.classList.add("complaint-card");
+        const statusClass = complaint.status.toLowerCase().replace(/\s+/g, '-');
+        complaintCard.innerHTML = `
+        <h3>${escapeHtml(complaint.title)}</h3>
+        <p>${escapeHtml(complaint.text)}</p>
+        <p><strong>Location:</strong> ${escapeHtml(complaint.location || 'Not specified')}</p>
+        <p><strong>Status:</strong> <span class="status ${statusClass}">${escapeHtml(complaint.status)}</span></p>
+        ${
+            complaint.owner === currentUser.email &&
+            complaint.status !== "Resolved"
+            ?
+            `<button class="success" onclick="resolveComplaint(${index})">Mark as Resolved</button>`
+            :
+            ""
+        }`;
+        complaintContainer.appendChild(complaintCard);
+    });
+}
 
-        const visibleComplaints = selectedStatus === "All"
-            ? complaints
-            : complaints.filter((complaint) => complaint.status === selectedStatus);
-
-        if (visibleComplaints.length === 0) {
-            complaintContainer.appendChild(createEmptyState("No complaints found with this status."));
+async function addComplaint() {
+    try {
+        if (currentUser.role !== "Student") {
+            alert("Only students can raise complaints");
             return;
         }
+        
+        let title = document.getElementById("complaintTitle").value;
+        let text = document.getElementById("complaintText").value;
+        let location = document.getElementById("complaintLocation")?.value || "";
+        
+        if (!title || !text) {
+            alert("Please fill all required fields");
+            return;
+        }
+
         
         let newComplaint = {
             title: title,
@@ -93,6 +102,7 @@ function filterComplaints() {
             return;
         }
         
+
         let filteredComplaints = complaints.filter(function(complaint) {
             return complaint.status === selectedStatus;
         });
@@ -146,16 +156,9 @@ function resolveComplaint(index) {
         if (confirm("Mark this complaint as resolved?")) {
             complaints[index].status = "Resolved";
             displayComplaints();
-        } catch (error) {
-            console.error("Error resolving complaint:", error);
-            alert(error.message || "Unable to update complaint. Please try again.");
+            alert("Complaint marked as resolved.");
         }
-    }
-
-    function createEmptyState(message) {
-        const empty = document.createElement("p");
-        empty.className = "empty-state";
-        empty.textContent = message;
-        return empty;
+    } catch (error) {
+        console.error("Error resolving complaint:", error);
     }
 }

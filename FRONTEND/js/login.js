@@ -2,54 +2,45 @@ const dummyUsers = [
     {
         rollNo: "25116083",
         email: "student1@nitrr.ac.in",
-        role: "Student",
-        name: "Rahul Dubey"
+        role: "Student"
     },
     {
         rollNo: "24115078",
         email: "club@nitrr.ac.in",
-        role: "Club Member",
-        name: "Coding Club"
+        role: "Club member"
     },
     {
-        rollNo: "24115079",
+        rollNo: "24115078",
         email: "student2@nitrr.ac.in",
-        role: "Student",
-        name: "Aman Sharma"
+        role: "Student"
     },
     {
         rollNo: "23118055",
         email: "admin@nitrr.ac.in",
-        role: "Admin",
-        name: "Admin"
+        role: "Admin"
     }
 ];
 
-const loginForm = document.getElementById("loginForm");
+function login() {
+    let rollNo = document.getElementById("rollNo").value.trim();
+    let email = document.getElementById("email").value.trim();
 
-loginForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const rollNo = document.getElementById("rollNo").value.trim();
-    const email = document.getElementById("email").value.trim().toLowerCase();
-
+    // Validate inputs
     if (!rollNo || !email) {
-        alert("Please fill in all fields.");
+        alert("Please fill in all fields");
         return;
     }
 
-    if (!email.endsWith("@nitrr.ac.in")) {
-        alert("Please use your institute email address.");
-        return;
-    }
-
-    const foundUser = dummyUsers.find((user) => user.rollNo === rollNo && user.email === email);
+    let foundUser = dummyUsers.find(function(user) {
+        return user.rollNo === rollNo && user.email === email;
+    });
 
     if (!foundUser) {
-        alert("Invalid credentials.");
+        alert("Invalid credentials");
         return;
     }
 
     localStorage.setItem("currentUser", JSON.stringify(foundUser));
+    alert("Login successful as " + foundUser.role);
     window.location.href = "feed.html";
-});
+}

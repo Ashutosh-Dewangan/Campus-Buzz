@@ -26,7 +26,6 @@ body {
 }
 
 header {
-   header {
     /* Blends a 70% opacity gradient over your image */
     background: linear-gradient(135deg, rgba(99, 102, 241, 0.7), rgba(129, 140, 248, 0.7)), 
                 url('../assets/images/background.jpeg');
@@ -37,8 +36,6 @@ header {
     padding: 4rem 1.5rem; /* Increased padding gives the background image more breathing room */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-}
-
 header h1 {
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
@@ -53,6 +50,7 @@ hr {
     border: none;
     border-top: 1px solid var(--border-color);
     margin: 2rem 0;
+
 }
 
 main {
@@ -164,8 +162,8 @@ nav {
 nav ul {
     list-style: none;
     display: flex;
-    align-items: center;
-    gap: 1rem;
+
+    gap: 2rem;
     flex-wrap: wrap;
 }
 
@@ -263,6 +261,7 @@ button.success:hover {
 }
 
 .content {
+    flex: 1;
     min-width: 0;
 }
 
@@ -443,8 +442,8 @@ label {
 
     .container {
         flex-direction: column;
-        gap: 2rem;
     }
+
 
     .sidebar {
         flex: 1;
@@ -488,10 +487,7 @@ label {
     button {
         padding: 0.6rem 1.2rem;
         font-size: 0.9rem;
-    }
-    
-    .new-post, .post-card, .complaint-card, .event-card, .about, .stats {
-        padding: 1.5rem;
+
     }
 }
 
