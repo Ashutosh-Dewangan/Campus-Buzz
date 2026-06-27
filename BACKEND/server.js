@@ -4,50 +4,55 @@ const path = require("path");
 
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
-console.log(__dirname);
-console.log(path.join(__dirname, "../FRONTEND"));
+
+// Serve static files from FRONTEND directory
 app.use(express.static(path.join(__dirname, "../FRONTEND")));
 
-
-app.get("/", (req, res) => {
-    res.send("Server is running 🚀");
-});
-
-//GET 
-const postRoutes = require("./routes/posts");
-const eventRoutes = require("./routes/events");
-const complaintRoutes = require("./routes/complaints");
-console.log("Post routes loaded:", postRoutes);
-console.log("Events routes loaded:", eventRoutes);
-console.log("Complaints route loaded:", complaintRoutes);
-
-
-// Add this to server.js
+// Logging middleware
 app.use((req, res, next) => {
     console.log(`Request received: ${req.method} ${req.url}`);
     next();
 });
-//OTHER
+
+// Root endpoint
+app.get("/", (req, res) => {
+    res.send("Server is running 🚀");
+});
+
+// Routes
+const postRoutes = require("./routes/posts");
+const eventRoutes = require("./routes/events");
+const complaintRoutes = require("./routes/complaints");
+
+console.log("Post routes loaded:", postRoutes);
+console.log("Events routes loaded:", eventRoutes);
+console.log("Complaints route loaded:", complaintRoutes);
+
+// Register routes
 app.use("/posts", postRoutes);
 app.use("/events", eventRoutes);
 app.use("/complaints", complaintRoutes);
 
-
+// Test route
 app.get("/test", (req, res) => {
     res.send("Test route works!");
 });
 
+// Serve feed.html for /abc endpoint
 app.get("/abc", (req, res) => {
     res.sendFile(path.join(__dirname, "../FRONTEND/feed.html"));
 });
 
+// Debug route
 app.get("/where", (req, res) => {
     res.send(path.join(__dirname, "../FRONTEND"));
 });
 
-app.listen(3000, () => {
-    console.log("Server running on port 3000");
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
-
