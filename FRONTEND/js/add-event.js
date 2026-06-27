@@ -29,19 +29,23 @@ document.getElementById("eventForm").addEventListener("submit", async function(e
         registration: document.getElementById("registration").value
     };
 
-    const response = await fetch("/events", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newEvent)
-    });
+    try {
+        const response = await fetch("/events", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newEvent)
+        });
 
-    if (!response.ok) {
+        if (!response.ok) {
+            throw new Error(`Failed to save event: ${response.status}`);
+        }
+
+        alert("Event added successfully!");
+        window.location.href = "events.html";
+    } catch (error) {
+        console.error("Error adding event:", error);
         alert("Unable to save event. Please try again.");
-        return;
     }
-
-    alert("Event added successfully!");
-    window.location.href = "events.html";
 });
 
 function logout() {
