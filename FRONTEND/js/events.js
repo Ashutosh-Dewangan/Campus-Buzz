@@ -3,9 +3,7 @@ if (!currentUser) {
     alert("Please login first");
     window.location.href = "login.html";
 }
-
 let events = {};
-
 async function loadEvents() {
     try {
         // call namespaced API path
@@ -27,23 +25,19 @@ async function loadEvents() {
         alert("Unable to load events. Please try again.");
     }
 }
-
 function renderEvents() {
     document.getElementById("eventCount").innerText =
         "Total Events: " + Object.keys(events).length;
-
     let allDates = document.querySelectorAll(".calendar a");
     allDates.forEach(function(link) {
         const day = link.textContent;
         link.style.fontWeight = "";
         link.style.color = "";
         link.style.backgroundColor = "";
-
         if (events[day]) {
             link.style.fontWeight = "bold";
             link.style.color = "green";
         }
-
         link.onclick = function() {
             if (events[day]) {
                 localStorage.setItem("selectedEvent", JSON.stringify(events[day]));
@@ -53,7 +47,6 @@ function renderEvents() {
             }
         };
     });
-
     const list = document.getElementById("eventList");
     list.innerHTML = "";
     for (const day in events) {
@@ -66,7 +59,6 @@ function renderEvents() {
         `;
     }
 }
-
 function searchEvent() {
     let day = prompt("Enter date to search:");
     let result = document.getElementById("searchResult");
@@ -90,10 +82,8 @@ function searchEvent() {
         result.innerHTML = "No event found.";
     }
 }
-
 function logout() {
     localStorage.removeItem("currentUser");
     window.location.href = "login.html";
 }
-
 loadEvents();

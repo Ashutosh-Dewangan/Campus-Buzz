@@ -6,34 +6,24 @@ if (!currentUser) {
 document.getElementById("userRole").innerText =
     "Logged in as: " + currentUser.role;
 let posts = [];
-
 async function loadPosts() {
     try {
         // namespaced API path to match backend
         const response = await fetch("/api/posts");
-
         console.log("Status:", response.status);
-
         if (!response.ok) {
             throw new Error(`Failed to load posts: ${response.status} ${response.statusText}`);
         }
-
         const data = await response.json();
-
         console.log("Data:", data);
-
         posts = data;
-
         console.log("Posts:", posts);
-
         displayPosts();
-
     } catch (error) {
         console.error("Error loading posts:", error);
         alert("Unable to load posts. Please try again later.");
     }
 }
-
 function displayPosts() {
     let postContainer = document.getElementById("postContainer");
     postContainer.innerHTML = "";
@@ -56,7 +46,6 @@ function displayPosts() {
         console.log(post.image);
     });
 }
-
 function updateTimers() {
     posts.forEach(function(post, index) {
         if (post.expiry) {
@@ -75,7 +64,6 @@ function updateTimers() {
         }
     });
 }
-
 async function addPost() {
     try {
         let username = document.getElementById("username").value;
@@ -88,7 +76,6 @@ async function addPost() {
             alert("Please fill all required fields");
             return;
         }
-        
         let newPost = {
             user: username,
             title: title,
@@ -98,22 +85,18 @@ async function addPost() {
             owner: currentUser.email,
             expiry: null
         };
-        
         if (hashtag === "#foodsplit" || hashtag === "#cabsplit") {
             newPost.expiry = Date.now() + 900000;
         }
-        
         // POST to namespaced API path
         const response = await fetch("/api/posts", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newPost)
         });
-        
         if (!response.ok) {
             throw new Error(`Failed to save post: ${response.status} ${response.statusText}`);
         }
-        
         posts.unshift(newPost);
         document.getElementById("username").value = "";
         document.getElementById("postTitle").value = "";
@@ -122,20 +105,17 @@ async function addPost() {
         document.getElementById("hashtag").value = "";
         displayPosts();
         alert("Post created successfully!");
-        
     } catch (error) {
         console.error("Error adding post:", error);
         alert("Unable to save post. Please try again.");
     }
 }
-
 function deletePost(index) {
     if (confirm("Are you sure you want to delete this post?")) {
         posts.splice(index, 1);
         displayPosts();
     }
 }
-
 function escapeHtml(text) {
     const map = {
         '&': '&amp;',
@@ -146,15 +126,12 @@ function escapeHtml(text) {
     };
     return String(text).replace(/[&<>\"']/g, m => map[m]);
 }
-
 loadPosts();
 setInterval(updateTimers, 1000);
-
 function logout() {
     localStorage.removeItem("currentUser");
     window.location.href = "login.html";
 }
-
 function handleHashtag(hashtag, user) {
     if (
         hashtag === "#foodsplit" ||
