@@ -7,20 +7,24 @@ if (!currentUser) {
 let events = {};
 
 async function loadEvents() {
-    const response = await fetch("/http://loaclhost:3000/events");
-    if (!response.ok) {
-        alert("Unable to load events.");
-        return;
-    }
-    const data = await response.json();
-    events = {};
-    data.forEach(function(event) {
-        const day = event.day || Number(String(event.date).match(/\d+/)?.[0]);
-        if (day) {
-            events[day] = event;
+    try {
+        const response = await fetch("/events");
+        if (!response.ok) {
+            throw new Error(`Failed to load events: ${response.status}`);
         }
-    });
-    renderEvents();
+        const data = await response.json();
+        events = {};
+        data.forEach(function(event) {
+            const day = event.day || Number(String(event.date).match(/\d+/)?.[0]);
+            if (day) {
+                events[day] = event;
+            }
+        });
+        renderEvents();
+    } catch (error) {
+        console.error("Error loading events:", error);
+        alert("Unable to load events. Please try again.");
+    }
 }
 
 function renderEvents() {
