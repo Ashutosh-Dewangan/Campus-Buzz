@@ -133,10 +133,22 @@ async function addPost() {
     }
 }
 
-function deletePost(index) {
+async function deletePost(index) {
     if (confirm("Are you sure you want to delete this post?")) {
-        posts.splice(index, 1);
-        displayPosts();
+        try {
+            const response = await fetch(`${API_BASE}/api/posts/${index}`, {
+                method: "DELETE"
+            });
+            if (!response.ok) {
+                throw new Error("Failed to delete post from server");
+            }
+            posts.splice(index, 1);
+            displayPosts();
+            alert("Post deleted successfully!");
+        } catch (error) {
+            console.error("Error deleting post:", error);
+            alert("Unable to delete post. Please try again.");
+        }
     }
 }
 

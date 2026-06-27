@@ -53,6 +53,19 @@ app.get("/where", (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+server.on("error", (e) => {
+    if (e.code === "EADDRINUSE") {
+        console.error(`\n❌ Error: Port ${PORT} is already in use.`);
+        console.error(`This usually means another instance of the server or a tool (like Live Server) is occupying it.`);
+        console.error(`Please close the other process or configure a different port using process.env.PORT.\n`);
+        process.exit(1);
+    } else {
+        console.error(e);
+    }
+});
+
+module.exports = app;
