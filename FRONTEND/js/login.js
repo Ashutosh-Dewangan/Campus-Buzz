@@ -20,16 +20,26 @@ const dummyUsers = [
         role: "Admin"
     }
 ];
+
 function login() {
-    let rollNo = document.getElementById("rollNo").value;
-    let email = document.getElementById("email").value;
+    let rollNo = document.getElementById("rollNo").value.trim();
+    let email = document.getElementById("email").value.trim();
+
+    // Validate inputs
+    if (!rollNo || !email) {
+        alert("Please fill in all fields");
+        return;
+    }
+
     let foundUser = dummyUsers.find(function(user) {
         return user.rollNo === rollNo && user.email === email;
     });
+
     if (!foundUser) {
         alert("Invalid credentials");
         return;
     }
+
     localStorage.setItem("currentUser", JSON.stringify(foundUser));
     alert("Login successful as " + foundUser.role);
     window.location.href = "feed.html";
